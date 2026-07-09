@@ -30,9 +30,12 @@ Hardhat owns Solidity; Python owns host checks, glue scripts, and optional analy
 |------|------|
 | `pipeline.sh` / `Makefile` | Unified entrypoints |
 | `hardhat.config.js` | Networks, solc 0.8.28, plugins |
-| `contracts/SecureVault.sol` | Scaffold vault (not production-audited) |
-| `test/SecureVault.js` | Unit tests |
-| `ignition/modules/SecureVault.js` | Local/declarative deploy |
+| `contracts/SecureVault.sol` | Owner-custody vault scaffold |
+| `contracts/AccountingVault.sol` | Pull/credit vault (different threat model) |
+| `contracts/test/AttackHelpers.sol` | Test-only reentrancy / reject helpers |
+| `test/*.js` | Unit + safety + invariant suites |
+| `ignition/modules/` | SecureVault + AccountingVault modules |
+| `docs/THREAT_MODELS.md` | Threat model notes |
 | `scripts/setup_python.sh` | One-shot venv bootstrap |
 | `src/preflight.py` | HW + Python + privacy checks |
 | `data/` | Local lineage (chmod 700; do not commit secrets) |
@@ -48,8 +51,9 @@ Hardhat owns Solidity; Python owns host checks, glue scripts, and optional analy
 
 - [x] Phase 0 — Python ethos foundation (venv, preflight, shell guard)
 - [x] Phase 1 — Hardhat 2 scaffold (SecureVault, tests, Ignition, coverage)
-- [ ] Phase 2 — Invariant / fuzz extras; optional Slither in venv if wheels allow
+- [x] Phase 2 — AccountingVault + reentrancy/safety extras + invariant loops
 - [ ] Phase 3 — Documented Sepolia path (env keys only); verify dry-run docs
+- [ ] Phase 4 — Optional static analysis (Slither) if Python wheels support 3.14
 
 ## Grok Build activation (paste)
 ```

@@ -41,6 +41,10 @@ const config = {
   mocha: {
     timeout: 60_000,
   },
+  // Attack helpers are test fixtures — do not pollute production coverage numbers
+  solidityCoverage: {
+    skipFiles: ["contracts/test/"],
+  },
 };
 
 module.exports = config;

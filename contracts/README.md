@@ -1,9 +1,20 @@
 # Contracts
 
-| Contract | Role |
-|----------|------|
-| `SecureVault.sol` | Minimal ownable ETH vault scaffold (deposit / withdraw / ownership) |
+| Contract | Threat model | Role |
+|----------|--------------|------|
+| `SecureVault.sol` | **Owner custody** — one owner can drain the pot | Ownable ETH vault (push withdraw) |
+| `AccountingVault.sol` | **Per-user credit / pull** — no shared owner drain | Ledger + self-service withdraw |
+| `test/AttackHelpers.sol` | Test-only | Reentrancy + reject-ETH probes |
+
+## Contrast (why both)
+
+| | SecureVault | AccountingVault |
+|--|-------------|-----------------|
+| Who withdraws? | Owner only | Each user their own credit |
+| Main risk class | Privileged key / owner malware | Insolvent ledger / over-credit |
+| Invariant | Only owner reduces balance | `totalCredit == nativeBalance` |
+| Withdraw style | Push to arbitrary `to` | Pull to `msg.sender` |
 
 **Not production-audited.** Patterns only: custom errors, reentrancy guard, CEI, events.
 
-Next candidates when the pipeline is stable: access-control variants, pause, multi-sig owner, formal invariant tests.
+Ignition modules: `ignition/modules/SecureVault.js`, `ignition/modules/AccountingVault.js`.

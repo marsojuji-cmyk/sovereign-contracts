@@ -14,7 +14,8 @@ Constraints → local-first · stdlib Python core · venv-scoped optional deps �
 |------|------|
 | **Hardhat 2** | Compile, test, Ignition deploy, verify (when keyed), coverage |
 | **Python 3** | Host preflight, future glue (stdlib-first) |
-| **SecureVault** | Ownable ETH vault scaffold (not production-audited) |
+| **SecureVault** | Owner-custody ETH vault scaffold |
+| **AccountingVault** | Pull/credit ledger (different threat model) |
 
 ## Quickstart
 
@@ -33,9 +34,10 @@ make check
 |---------|--------|
 | `make preflight` | Hardware + Python + privacy |
 | `make compile` | Solidity → artifacts |
-| `make test` | 11 unit tests |
+| `make test` | Full suite (unit + safety + invariants) |
 | `make coverage` | solidity-coverage report |
-| `make deploy-local` | Ignition → in-process Hardhat Network |
+| `make deploy-local` | Ignition → SecureVault (hardhat net) |
+| `make deploy-accounting` | Ignition → AccountingVault |
 | `make check` | preflight + compile + test |
 | `./pipeline.sh hardhat …` | raw Hardhat proxy |
 
@@ -52,15 +54,18 @@ npm run check
 
 ```
 secure_pipeline/
-├── pipeline.sh / Makefile     # unified entrypoints
-├── hardhat.config.js          # local networks; verify key via env only
-├── contracts/SecureVault.sol  # scaffold contract
-├── test/SecureVault.js        # unit tests
-├── ignition/modules/          # declarative deploy
+├── pipeline.sh / Makefile
+├── hardhat.config.js
+├── contracts/
+│   ├── SecureVault.sol        # owner custody
+│   ├── AccountingVault.sol    # pull/credit ledger
+│   └── test/AttackHelpers.sol # reentrancy probes
+├── test/                      # unit + safety + invariants
+├── ignition/modules/
+├── docs/THREAT_MODELS.md
 ├── scripts/setup_python.sh
-├── src/preflight.py           # stdlib host checks
-├── AGENTS.md                  # ethos rules for agents
-└── .env.example               # optional remote keys (never commit .env)
+├── src/preflight.py
+└── AGENTS.md
 ```
 
 ## Python doctrine
@@ -76,7 +81,7 @@ Same as `grok-terminal-ethos` / ClearBlock:
 
 - **No private keys in git.** Use `.env` locally; see `.env.example`.
 - Default network is **in-process Hardhat** — no RPC, no funds at risk.
-- `SecureVault` is a **teaching scaffold**, not an audited product.
+- Contracts are **teaching scaffolds**, not audited products. See `docs/THREAT_MODELS.md`.
 - Etherscan verify stays inert until `ETHERSCAN_API_KEY` is set.
 
 ## Current status
@@ -85,10 +90,11 @@ Same as `grok-terminal-ethos` / ClearBlock:
 |------|--------|
 | Python preflight | Ready |
 | Compile (0.8.28) | Ready |
-| Unit tests | 11 passing |
-| Coverage | ~100% stmts/lines (branches ~81%) |
-| Ignition local deploy | Ready |
+| Tests | 25 passing (unit + safety + invariants) |
+| Coverage | ~100% stmts/lines on production contracts |
+| Ignition local deploy | SecureVault + AccountingVault |
 | Live network / verify | Configured, keys optional |
+| Phase 2 safety | Done |
 
 ## Doctrine
 
