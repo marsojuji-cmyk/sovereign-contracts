@@ -7,16 +7,18 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
 WITH_OPTIONAL=0
+WITH_SLITHER=0
 FORCE=0
 
 usage() {
   cat <<'EOF'
-Usage: ./scripts/setup_python.sh [--with-optional] [--force]
+Usage: ./scripts/setup_python.sh [--with-optional] [--with-slither] [--force]
 
   Creates .venv with stdlib venv (no pyenv/conda required).
   Core pipeline scripts need zero pip packages.
 
   --with-optional   pip install -r requirements.txt (e.g. rich)
+  --with-slither    pip install -r requirements-slither.txt (Phase 4)
   --force           recreate .venv even if it exists
 EOF
 }
@@ -24,6 +26,7 @@ EOF
 for arg in "$@"; do
   case "$arg" in
     --with-optional) WITH_OPTIONAL=1 ;;
+    --with-slither) WITH_SLITHER=1 ;;
     --force) FORCE=1 ;;
     -h|--help) usage; exit 0 ;;
     *) echo "Unknown arg: $arg" >&2; usage; exit 2 ;;
@@ -58,10 +61,18 @@ echo "==> Upgrading pip inside venv only"
 "$PY" -m pip install --upgrade pip
 
 if [[ "$WITH_OPTIONAL" -eq 1 ]]; then
-  echo "==> Installing optional requirements"
+  echo "==> Installing optional requirements (rich)"
   "$PIP" install -r "$ROOT/requirements.txt"
 else
-  echo "==> Skipping optional deps (stdlib-only core). Pass --with-optional for rich."
+  echo "==> Skipping optional UI deps. Pass --with-optional for rich."
+fi
+
+if [[ "$WITH_SLITHER" -eq 1 ]]; then
+  echo "==> Installing Slither stack (pinned for Python 3.14 / no Rust cbor2)"
+  "$PIP" install -r "$ROOT/requirements-slither.txt"
+  echo "==> Slither: $("$ROOT/.venv/bin/slither" --version 2>/dev/null || true)"
+else
+  echo "==> Skipping Slither. Pass --with-slither for static analysis."
 fi
 
 mkdir -p "$ROOT/data" "$ROOT/logs"
@@ -73,3 +84,4 @@ echo "    Interpreter: $PY"
 "$PY" -c 'import sys; print("    Version:    ", sys.version.split()[0])'
 echo "    Preflight:   ./pipeline.sh preflight"
 echo "    Optional:    ./scripts/setup_python.sh --with-optional"
+echo "    Slither:     ./scripts/setup_python.sh --with-slither && make slither"

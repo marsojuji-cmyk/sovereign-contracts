@@ -34,10 +34,12 @@ Secure Pipeline
   ./pipeline.sh check           preflight + compile + test
   ./pipeline.sh deploy-local    Ignition SecureVault (hardhat net)
   ./pipeline.sh env-check       Offline env shape check (no RPC)
+  ./pipeline.sh slither         Static analysis (optional Phase 4)
   ./pipeline.sh hardhat ...     Proxy to npx hardhat
 
 Ethos: local-first · no global pip · optional deps only in .venv
 Sepolia ops: docs/NETWORK_OPS.md (explicit commands only)
+Slither:     docs/STATIC_ANALYSIS.md
 EOF
 }
 
@@ -97,6 +99,9 @@ case "$cmd" in
     ;;
   env-check)
     exec bash "$ROOT/scripts/check_env.sh" "$@"
+    ;;
+  slither|static)
+    exec bash "$ROOT/scripts/run_slither.sh" "$@"
     ;;
   hardhat|hh)
     need_npx

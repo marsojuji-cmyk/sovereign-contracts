@@ -40,9 +40,12 @@ make check
 | `make deploy-accounting` | Ignition → AccountingVault |
 | `make check` | preflight + compile + test |
 | `make env-check` | Offline env shape (no RPC) |
+| `make slither` | Static analysis (optional; needs setup-slither) |
+| `make check-full` | check + slither |
 | `./pipeline.sh hardhat …` | raw Hardhat proxy |
 
-**Sepolia / verify:** documented only — see [`docs/NETWORK_OPS.md`](docs/NETWORK_OPS.md). No `make deploy-sepolia` (on purpose).
+**Sepolia / verify:** [`docs/NETWORK_OPS.md`](docs/NETWORK_OPS.md) (no `make deploy-sepolia`).  
+**Slither:** [`docs/STATIC_ANALYSIS.md`](docs/STATIC_ANALYSIS.md) — `make setup-slither && make slither`.
 
 npm mirrors:
 
@@ -67,8 +70,12 @@ secure_pipeline/
 ├── ignition/modules/
 ├── docs/THREAT_MODELS.md
 ├── docs/NETWORK_OPS.md        # Phase 3: optional Sepolia / verify
+├── docs/STATIC_ANALYSIS.md    # Phase 4: Slither
+├── requirements-slither.txt
+├── slither.config.json
 ├── scripts/setup_python.sh
-├── scripts/check_env.sh       # offline env shape
+├── scripts/run_slither.sh
+├── scripts/check_env.sh
 ├── src/preflight.py
 └── AGENTS.md
 ```
@@ -101,7 +108,7 @@ Same as `grok-terminal-ethos` / ClearBlock:
 | Network ops docs | `docs/NETWORK_OPS.md` (Phase 3) |
 | Sepolia in Hardhat | Only if `SEPOLIA_RPC_URL` set |
 | Live deploy / verify | Opt-in; not part of `make check` |
-| Phase 2–3 | Done |
+| Phase 2–4 | Done (Slither optional via setup-slither) |
 
 ## Doctrine
 

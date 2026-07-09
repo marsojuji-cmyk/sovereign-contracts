@@ -25,6 +25,7 @@ ignition/deployments/
 # Local sovereign state (never commit secrets)
 data/
 logs/
+reports/
 .env
 .env.*
 !.env.example
