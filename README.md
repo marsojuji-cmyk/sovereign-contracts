@@ -39,7 +39,10 @@ make check
 | `make deploy-local` | Ignition → SecureVault (hardhat net) |
 | `make deploy-accounting` | Ignition → AccountingVault |
 | `make check` | preflight + compile + test |
+| `make env-check` | Offline env shape (no RPC) |
 | `./pipeline.sh hardhat …` | raw Hardhat proxy |
+
+**Sepolia / verify:** documented only — see [`docs/NETWORK_OPS.md`](docs/NETWORK_OPS.md). No `make deploy-sepolia` (on purpose).
 
 npm mirrors:
 
@@ -63,7 +66,9 @@ secure_pipeline/
 ├── test/                      # unit + safety + invariants
 ├── ignition/modules/
 ├── docs/THREAT_MODELS.md
+├── docs/NETWORK_OPS.md        # Phase 3: optional Sepolia / verify
 ├── scripts/setup_python.sh
+├── scripts/check_env.sh       # offline env shape
 ├── src/preflight.py
 └── AGENTS.md
 ```
@@ -93,8 +98,10 @@ Same as `grok-terminal-ethos` / ClearBlock:
 | Tests | 25 passing (unit + safety + invariants) |
 | Coverage | ~100% stmts/lines on production contracts |
 | Ignition local deploy | SecureVault + AccountingVault |
-| Live network / verify | Configured, keys optional |
-| Phase 2 safety | Done |
+| Network ops docs | `docs/NETWORK_OPS.md` (Phase 3) |
+| Sepolia in Hardhat | Only if `SEPOLIA_RPC_URL` set |
+| Live deploy / verify | Opt-in; not part of `make check` |
+| Phase 2–3 | Done |
 
 ## Doctrine
 

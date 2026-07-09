@@ -36,7 +36,10 @@ Hardhat owns Solidity; Python owns host checks, glue scripts, and optional analy
 | `test/*.js` | Unit + safety + invariant suites |
 | `ignition/modules/` | SecureVault + AccountingVault modules |
 | `docs/THREAT_MODELS.md` | Threat model notes |
+| `docs/NETWORK_OPS.md` | Sepolia / verify ops (opt-in; docs-first) |
 | `scripts/setup_python.sh` | One-shot venv bootstrap |
+| `scripts/check_env.sh` | Offline env shape check |
+| `scripts/load_env.js` | Minimal .env loader (no dotenv dep) |
 | `src/preflight.py` | HW + Python + privacy checks |
 | `data/` | Local lineage (chmod 700; do not commit secrets) |
 
@@ -52,7 +55,7 @@ Hardhat owns Solidity; Python owns host checks, glue scripts, and optional analy
 - [x] Phase 0 — Python ethos foundation (venv, preflight, shell guard)
 - [x] Phase 1 — Hardhat 2 scaffold (SecureVault, tests, Ignition, coverage)
 - [x] Phase 2 — AccountingVault + reentrancy/safety extras + invariant loops
-- [ ] Phase 3 — Documented Sepolia path (env keys only); verify dry-run docs
+- [x] Phase 3 — Documented Sepolia path (env keys only); verify dry-run docs
 - [ ] Phase 4 — Optional static analysis (Slither) if Python wheels support 3.14
 
 ## Grok Build activation (paste)

@@ -33,9 +33,11 @@ Secure Pipeline
   ./pipeline.sh coverage        solidity-coverage
   ./pipeline.sh check           preflight + compile + test
   ./pipeline.sh deploy-local    Ignition SecureVault (hardhat net)
+  ./pipeline.sh env-check       Offline env shape check (no RPC)
   ./pipeline.sh hardhat ...     Proxy to npx hardhat
 
 Ethos: local-first · no global pip · optional deps only in .venv
+Sepolia ops: docs/NETWORK_OPS.md (explicit commands only)
 EOF
 }
 
@@ -92,6 +94,9 @@ case "$cmd" in
   deploy-local)
     need_npx
     exec npx hardhat ignition deploy ./ignition/modules/SecureVault.js "$@"
+    ;;
+  env-check)
+    exec bash "$ROOT/scripts/check_env.sh" "$@"
     ;;
   hardhat|hh)
     need_npx

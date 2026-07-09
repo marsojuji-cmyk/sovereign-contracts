@@ -9,6 +9,7 @@
     "test": "hardhat test",
     "coverage": "hardhat coverage",
     "check": "./pipeline.sh check",
+    "env-check": "./scripts/check_env.sh",
     "deploy:local": "hardhat ignition deploy ./ignition/modules/SecureVault.js",
     "clean": "hardhat clean && rm -rf coverage coverage.json"
   },

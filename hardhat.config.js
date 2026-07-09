@@ -1,7 +1,11 @@
 /**
  * Secure Pipeline — Hardhat 2 config
  * Local-first: default network is hardhat (in-process). No remote RPC required.
+ * Sepolia appears only when SEPOLIA_RPC_URL is set (see docs/NETWORK_OPS.md).
  */
+const { loadEnv } = require("./scripts/load_env");
+loadEnv();
+
 require("@nomicfoundation/hardhat-toolbox");
 require("@nomicfoundation/hardhat-ignition");
 require("solidity-coverage");
@@ -34,7 +38,7 @@ const config = {
       chainId: 31337,
     },
   },
-  // Verify stays configured but inert until API keys are set in env (never commit secrets)
+  // Verify stays inert until ETHERSCAN_API_KEY is set (never commit secrets)
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY || "",
   },
@@ -46,5 +50,17 @@ const config = {
     skipFiles: ["contracts/test/"],
   },
 };
+
+// Optional Sepolia — omitted entirely when RPC URL unset (offline-safe default)
+if (process.env.SEPOLIA_RPC_URL) {
+  const accounts = process.env.DEPLOYER_PRIVATE_KEY
+    ? [process.env.DEPLOYER_PRIVATE_KEY]
+    : [];
+  config.networks.sepolia = {
+    url: process.env.SEPOLIA_RPC_URL,
+    chainId: 11155111,
+    accounts,
+  };
+}
 
 module.exports = config;
