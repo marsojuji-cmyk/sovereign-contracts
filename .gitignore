@@ -1,0 +1,36 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+
+# Node / Hardhat
+node_modules/
+cache/
+artifacts/
+typechain/
+typechain-types/
+coverage/
+coverage.json
+gasReporterOutput.json
+ignition/deployments/
+
+# Local sovereign state (never commit secrets)
+data/
+logs/
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/
