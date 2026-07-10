@@ -1,8 +1,11 @@
-# Optional static analysis (Phase 4) — install only into project .venv
+# Optional static analysis — install only into project .venv
 #   ./scripts/setup_python.sh --with-slither
-#   # or: .venv/bin/pip install -r requirements-slither.txt
 #
-# Pin cbor2 to a pure-Python wheel: newer cbor2 needs Rust on Python 3.14
-# (no universal wheel yet on this host).
+# Dual-boot reality (Sonoma CLT Python 3.9 vs Monterey Framework 3.10+):
+#   - slither-analyzer 0.11.5 requires Python >= 3.10
+#   - on Python 3.9 use 0.11.3 (last line that still installs on 3.9)
+#
+# Pin cbor2 pure-Python/wheel friendly on older macOS / 3.14 builds.
 cbor2==5.6.5
-slither-analyzer==0.11.5
+slither-analyzer==0.11.3; python_version < "3.10"
+slither-analyzer==0.11.5; python_version >= "3.10"

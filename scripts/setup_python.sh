@@ -43,15 +43,33 @@ echo "==> Host interpreter: $PY_SYS"
 "$PY_SYS" -c 'import sys; print("==> Version:", sys.version.split()[0])'
 "$PY_SYS" -c 'import ensurepip, venv; print("==> ensurepip + venv: ok")'
 
+# Detect broken dual-boot venvs (e.g. python → missing Framework 3.14 on Sonoma)
+VENV_PY="$ROOT/.venv/bin/python"
+if [[ -e "$VENV_PY" || -L "$VENV_PY" ]]; then
+  if ! "$VENV_PY" -c 'import sys' >/dev/null 2>&1; then
+    echo "==> .venv interpreter broken (cross-boot / missing framework) — recreating"
+    FORCE=1
+  fi
+fi
+
 if [[ -x "$ROOT/.venv/bin/python" && "$FORCE" -eq 0 ]]; then
-  echo "==> .venv already present (use --force to recreate)"
-else
-  if [[ -d "$ROOT/.venv" && "$FORCE" -eq 1 ]]; then
-    echo "==> Removing existing .venv (--force)"
+  if "$ROOT/.venv/bin/python" -c 'import sys' >/dev/null 2>&1; then
+    echo "==> .venv already present (use --force to recreate)"
+  else
+    FORCE=1
+  fi
+fi
+
+if [[ ! -x "$ROOT/.venv/bin/python" || "$FORCE" -eq 1 ]]; then
+  if [[ -d "$ROOT/.venv" ]]; then
+    echo "==> Removing existing .venv"
     rm -rf "$ROOT/.venv"
   fi
-  echo "==> Creating .venv (stdlib venv)"
-  "$PY_SYS" -m venv "$ROOT/.venv"
+  echo "==> Creating .venv (stdlib venv) with $PY_SYS"
+  if ! "$PY_SYS" -m venv "$ROOT/.venv"; then
+    echo "ERROR: venv creation failed. On some builds try: python3 -m venv .venv" >&2
+    exit 1
+  fi
 fi
 
 PY="$ROOT/.venv/bin/python"

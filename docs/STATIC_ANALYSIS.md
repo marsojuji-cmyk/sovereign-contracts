@@ -12,18 +12,19 @@
 
 ## Install (once)
 
-Python **3.14** on this host needs a **pinned pure-Python `cbor2`** (newer `cbor2` tries to build Rust extensions when no wheel exists).
-
 ```bash
-cd /Users/admin/agents/secure_pipeline
-./scripts/setup_python.sh --with-slither
+cd /Volumes/Agent_Tenet10/Users/admin/agents/secure_pipeline   # or your clone
+export PATH="$HOME/.local/bin:$PATH"   # Node for Hardhat if needed
+./scripts/setup_python.sh --with-slither --force
 # equivalent: .venv/bin/pip install -r requirements-slither.txt
 ```
 
 | Package | Pin | Why |
 |---------|-----|-----|
-| `cbor2` | `5.6.5` | `py3-none-any` wheel — no Rust |
-| `slither-analyzer` | `0.11.5` | current stable at setup time |
+| `cbor2` | `5.6.5` | wheel-friendly / avoids Rust builds on odd Pythons |
+| `slither-analyzer` | `0.11.3` if Python **&lt; 3.10**; `0.11.5` if **≥ 3.10** | 0.11.5 needs 3.10+; Sonoma CLT is often 3.9 |
+
+**Dual-boot note:** A `.venv` built on Monterey (e.g. Framework Python 3.14) will break on Sonoma if that interpreter is missing. `setup_python.sh` now recreates broken venvs. Prefer re-running setup on the boot you use for `make check-full`.
 
 Never: `pip install slither-analyzer` into system/Frameworks Python.
 
@@ -57,7 +58,7 @@ Filter: `contracts/test/` (attack helpers) and `node_modules/`.
 | Low / Informational | Report only (do not fail) |
 
 `make check` stays **without** Slither so the core gate remains lean on cold machines.  
-`make check-full` = `check` + `slither` when you want the heavier path.
+`make check-full` = `check` + `slither` — **required for any `contracts/` (or safety-path) diff** before merge/portfolio claim.
 
 ---
 

@@ -41,11 +41,13 @@ Hardhat owns Solidity; Python owns host checks, glue scripts, and optional analy
 | `docs/STATIC_ANALYSIS.md` | Slither install / gate / accepted findings |
 | `requirements-slither.txt` | Pinned Slither stack (cbor2 5.6.5 + analyzer) |
 | `slither.config.json` | Filter paths + fail policy |
-| `scripts/setup_python.sh` | One-shot venv bootstrap |
+| `scripts/setup_python.sh` | One-shot venv bootstrap (recreates broken dual-boot venvs) |
 | `scripts/run_slither.sh` | Static analysis runner |
-| `scripts/check_env.sh` | Offline env shape check |
+| `scripts/check_env.sh` | Offline env shape + secret-pattern scan |
+| `scripts/coverage_floor.py` | 100% stmt floor on production vaults |
+| `scripts/env_probe.py` | `PIPELINE_ENV` detection (no RPC) |
 | `scripts/load_env.js` | Minimal .env loader (no dotenv dep) |
-| `src/preflight.py` | HW + Python + privacy checks |
+| `src/preflight.py` | HW + Python + privacy + `data/health.json` |
 | `data/` | Local lineage (chmod 700; do not commit secrets) |
 
 ## When editing this project
