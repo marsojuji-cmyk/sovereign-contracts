@@ -4,22 +4,24 @@
 ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 .DEFAULT_GOAL := help
 
-.PHONY: help preflight setup-python setup-slither compile test coverage check check-full \
-	env-check slither deploy-local deploy-accounting clean all
+.PHONY: help preflight setup-python setup-slither compile test coverage coverage-gate \
+	check check-full env-check env-probe slither deploy-local deploy-accounting clean all
 
 help:
 	@echo "Secure Pipeline"
 	@echo ""
-	@echo "  make preflight           Host / Python / privacy checks"
+	@echo "  make preflight           Host / Python / privacy checks (+ data/health.json)"
 	@echo "  make setup-python        Create .venv (stdlib)"
-	@echo "  make setup-slither       .venv + Slither (Phase 4, optional)"
+	@echo "  make setup-slither       .venv + Slither (Phase 4+)"
 	@echo "  make compile             solc via Hardhat"
 	@echo "  make test                Unit + safety + invariant tests"
 	@echo "  make coverage            solidity-coverage report"
-	@echo "  make check               preflight + compile + test (CI gate)"
+	@echo "  make coverage-gate       Require 100% stmt on production vaults (needs report)"
+	@echo "  make check               preflight + compile + test (fast dev gate)"
 	@echo "  make slither             Static analysis (requires setup-slither)"
-	@echo "  make check-full          check + slither"
-	@echo "  make env-check           Offline .env shape check (no RPC)"
+	@echo "  make check-full          check + slither (required for contracts/ diffs)"
+	@echo "  make env-check           Offline .env shape + secret-pattern scan"
+	@echo "  make env-probe           Detect PIPELINE_ENV=local|local-node|testnet"
 	@echo "  make deploy-local        Ignition → SecureVault (hardhat)"
 	@echo "  make deploy-accounting   Ignition → AccountingVault (hardhat)"
 	@echo "  make clean               cache / artifacts / coverage / reports"
@@ -27,6 +29,7 @@ help:
 	@echo ""
 	@echo "Sepolia / verify: docs/NETWORK_OPS.md"
 	@echo "Slither:          docs/STATIC_ANALYSIS.md"
+	@echo "Phase 5 gates:    AGENTS.md"
 	@echo ""
 
 preflight:
@@ -47,6 +50,10 @@ test:
 coverage:
 	@npx hardhat coverage
 
+# Uses existing report; does not re-run coverage (keeps gate intentional).
+coverage-gate:
+	@python3 $(ROOT)scripts/coverage_floor.py
+
 check: preflight compile test
 	@echo ""
 	@echo "✓ check passed (preflight + compile + test)"
@@ -54,12 +61,18 @@ check: preflight compile test
 slither:
 	@bash $(ROOT)scripts/run_slither.sh
 
+# Merge / contracts/ gate: full suite + static analysis.
+# Coverage floor is separate (make coverage && make coverage-gate) — slow on Intel.
 check-full: check slither
 	@echo ""
 	@echo "✓ check-full passed (check + slither)"
+	@echo "  Optional: make coverage && make coverage-gate"
 
 env-check:
 	@bash $(ROOT)scripts/check_env.sh
+
+env-probe:
+	@python3 $(ROOT)scripts/env_probe.py
 
 deploy-local:
 	@npx hardhat ignition deploy ./ignition/modules/SecureVault.js

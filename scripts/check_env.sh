@@ -107,8 +107,44 @@ else
 fi
 
 echo
+echo "Secret-pattern scan (contracts/ scripts/ src/ — no values printed)"
+echo "----------------------------------------------------------------"
+# Fail if a 64-hex private-key-shaped token appears outside .env
+# (common accidental commit pattern). Does not print matching lines.
+scan_dirs=(contracts scripts src)
+hits=0
+for d in "${scan_dirs[@]}"; do
+  [[ -d "$ROOT/$d" ]] || continue
+  # -I skip binary; exclude node_modules if nested
+  if command -v rg >/dev/null 2>&1; then
+    if rg -n --hidden -I -g '!.git/**' -g '!node_modules/**' \
+      -e '0x[a-fA-F0-9]{64}' -e '(?i)(private[_-]?key|secret[_-]?key)\s*[:=]\s*0x' \
+      "$ROOT/$d" >/dev/null 2>&1; then
+      echo "  ✗ possible key material pattern under $d/"
+      hits=$((hits + 1))
+      ok=0
+    else
+      echo "  ✓ no key-shaped patterns in $d/"
+    fi
+  else
+    if grep -R -n -E '0x[a-fA-F0-9]{64}' "$ROOT/$d" 2>/dev/null \
+      | grep -v node_modules | grep -q .; then
+      echo "  ✗ possible key material pattern under $d/"
+      hits=$((hits + 1))
+      ok=0
+    else
+      echo "  ✓ no key-shaped patterns in $d/"
+    fi
+  fi
+done
+if [[ "$hits" -gt 0 ]]; then
+  echo "  Fix: remove secrets from tracked files; use .env (gitignored) only."
+fi
+
+echo
 echo "Docs: docs/NETWORK_OPS.md"
 echo "Local gate still: make check  (no env required)"
+echo "Contracts diff gate: make check-full"
 echo
 
 if [[ "$ok" -eq 1 ]]; then

@@ -38,10 +38,12 @@ make check
 | `make coverage` | solidity-coverage report |
 | `make deploy-local` | Ignition → SecureVault (hardhat net) |
 | `make deploy-accounting` | Ignition → AccountingVault |
-| `make check` | preflight + compile + test |
-| `make env-check` | Offline env shape (no RPC) |
-| `make slither` | Static analysis (optional; needs setup-slither) |
-| `make check-full` | check + slither |
+| `make check` | preflight + compile + test (fast) |
+| `make check-full` | **contracts/ gate** — check + slither |
+| `make coverage-gate` | 100% stmt floor on production vaults (after `make coverage`) |
+| `make env-check` | Offline env shape + secret-pattern scan |
+| `make env-probe` | `PIPELINE_ENV=local\|local-node\|testnet` |
+| `make slither` | Static analysis (needs setup-slither) |
 | `./pipeline.sh hardhat …` | raw Hardhat proxy |
 
 **Sepolia / verify:** [`docs/NETWORK_OPS.md`](docs/NETWORK_OPS.md) (no `make deploy-sepolia`).  
@@ -108,7 +110,8 @@ Same as `grok-terminal-ethos` / ClearBlock:
 | Network ops docs | `docs/NETWORK_OPS.md` (Phase 3) |
 | Sepolia in Hardhat | Only if `SEPOLIA_RPC_URL` set |
 | Live deploy / verify | Opt-in; not part of `make check` |
-| Phase 2–4 | Done (Slither optional via setup-slither) |
+| Phase 2–4 | Done (Slither via setup-slither) |
+| Phase 5 | health.json · coverage-gate · secret scan · env-probe · check-full doctrine |
 
 ## Doctrine
 

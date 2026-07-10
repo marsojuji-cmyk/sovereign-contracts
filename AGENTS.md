@@ -62,12 +62,28 @@ Hardhat owns Solidity; Python owns host checks, glue scripts, and optional analy
 - [x] Phase 2 — AccountingVault + reentrancy/safety extras + invariant loops
 - [x] Phase 3 — Documented Sepolia path (env keys only); verify dry-run docs
 - [x] Phase 4 — Optional Slither (venv; cbor2 pin for Python 3.14)
+- [x] Phase 5 — Self-assessing gates: health.json, coverage floor, secret scan, env probe
+
+## Gates (Phase 5)
+
+| Gate | Command | When |
+|------|---------|------|
+| Fast dev | `make check` | every local edit loop |
+| **Contracts merge** | `make check-full` | any diff under `contracts/` (or `test/` safety paths) |
+| Coverage floor | `make coverage && make coverage-gate` | before claiming 100% / portfolio evidence |
+| Env / secrets | `make env-check` | before any network or deploy command |
+| Env tier | `make env-probe` | detect `PIPELINE_ENV` without RPC |
+
+- Preflight writes **`data/health.json`** (gitignored under `data/`) — env shape, privacy, coverage snapshot if present.
+- Secret scan in `scripts/check_env.sh` fails on `0x`+64-hex patterns under `contracts/`, `scripts/`, `src/`.
+- Hardhat already caches compiles via `cache/solidity-files-cache.json` — do not reimplement.
 
 ## Grok Build activation (paste)
 ```
-Plan: Work inside /Users/admin/agents/secure_pipeline using AGENTS.md ethos.
+Plan: Work inside secure_pipeline using AGENTS.md ethos.
+Path: /Volumes/Agent_Tenet10/Users/admin/agents/secure_pipeline (or local clone).
 Stack: Hardhat 2 for Solidity; Python stdlib-first + optional .venv.
-Hardware: 2015-class Intel MBP / Monterey — lightweight, no global pip installs.
+Hardware: 2015-class Intel MBP — lightweight, no global pip installs.
 Privacy: local-only core; no telemetry; no secrets in git.
-Success: make check green; auditable diffs; contracts tested before deploy modules change.
+Success: make check green; contracts/ diffs also make check-full; auditable diffs.
 ```
