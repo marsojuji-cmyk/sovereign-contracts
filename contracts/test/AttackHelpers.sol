@@ -39,7 +39,10 @@ contract SecureVaultReentrancyAttacker {
 
     receive() external payable {
         if (attacking) {
-            // Balance may already be reduced mid-call; still attempt reentry.
+            // Single reentry only. Infinite reentry always ends in InsufficientBalance
+            // (and looks like TransferFailed even without nonReentrant). One reentry
+            // with amount < total balance is what proves the guard is load-bearing.
+            attacking = false;
             vault.withdraw(payable(address(this)), attackAmount);
         }
     }

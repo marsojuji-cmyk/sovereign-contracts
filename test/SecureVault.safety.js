@@ -25,13 +25,17 @@ describe("SecureVault safety extras", function () {
 
   it("blocks reentrant withdraw when owner is a malicious contract", async function () {
     const { vault, attacker, funder } = await loadFixture(deployWithAttackerOwner);
-    const amount = ethers.parseEther("1");
-    await vault.connect(funder).deposit({ value: amount });
+    // Deposit 2 ETH and reenter with 1 ETH each time. Without nonReentrant, the
+    // attacker can pull twice (balance-only accounting); CEI-on-balance alone
+    // does NOT stop that when amount < full balance. Use 2x so missing guard fails.
+    const total = ethers.parseEther("2");
+    const slice = ethers.parseEther("1");
+    await vault.connect(funder).deposit({ value: total });
 
     // nonReentrant trips inside receive; ETH call fails → TransferFailed at outer withdraw
-    await expect(attacker.attack(amount)).to.be.revertedWithCustomError(vault, "TransferFailed");
-    // Funds remain; no drain
-    expect(await vault.balance()).to.equal(amount);
+    await expect(attacker.attack(slice)).to.be.revertedWithCustomError(vault, "TransferFailed");
+    // Funds remain; no partial drain
+    expect(await vault.balance()).to.equal(total);
   });
 
   it("reverts TransferFailed when recipient rejects ETH", async function () {

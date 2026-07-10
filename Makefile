@@ -5,7 +5,8 @@ ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 .DEFAULT_GOAL := help
 
 .PHONY: help preflight setup-python setup-slither compile test coverage coverage-gate \
-	check check-full env-check env-probe slither deploy-local deploy-accounting clean all
+	check check-full env-check env-probe mutation-smoke slither deploy-local \
+	deploy-accounting clean all
 
 help:
 	@echo "Secure Pipeline"
@@ -22,6 +23,7 @@ help:
 	@echo "  make check-full          check + slither (required for contracts/ diffs)"
 	@echo "  make env-check           Offline .env shape + secret-pattern scan"
 	@echo "  make env-probe           Detect PIPELINE_ENV=local|local-node|testnet"
+	@echo "  make mutation-smoke      Strip nonReentrant; expect fail; restore"
 	@echo "  make deploy-local        Ignition → SecureVault (hardhat)"
 	@echo "  make deploy-accounting   Ignition → AccountingVault (hardhat)"
 	@echo "  make clean               cache / artifacts / coverage / reports"
@@ -73,6 +75,9 @@ env-check:
 
 env-probe:
 	@python3 $(ROOT)scripts/env_probe.py
+
+mutation-smoke:
+	@bash $(ROOT)scripts/mutation_smoke.sh
 
 deploy-local:
 	@npx hardhat ignition deploy ./ignition/modules/SecureVault.js

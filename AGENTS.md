@@ -46,6 +46,7 @@ Hardhat owns Solidity; Python owns host checks, glue scripts, and optional analy
 | `scripts/check_env.sh` | Offline env shape + secret-pattern scan |
 | `scripts/coverage_floor.py` | 100% stmt floor on production vaults |
 | `scripts/env_probe.py` | `PIPELINE_ENV` detection (no RPC) |
+| `scripts/mutation_smoke.sh` | Deliberate nonReentrant strip → expect fail → restore |
 | `scripts/load_env.js` | Minimal .env loader (no dotenv dep) |
 | `src/preflight.py` | HW + Python + privacy + `data/health.json` |
 | `data/` | Local lineage (chmod 700; do not commit secrets) |
@@ -75,6 +76,7 @@ Hardhat owns Solidity; Python owns host checks, glue scripts, and optional analy
 | Coverage floor | `make coverage && make coverage-gate` | before claiming 100% / portfolio evidence |
 | Env / secrets | `make env-check` | before any network or deploy command |
 | Env tier | `make env-probe` | detect `PIPELINE_ENV` without RPC |
+| Mutation bite | `make mutation-smoke` | suite must fail under guard removal |
 
 - Preflight writes **`data/health.json`** (gitignored under `data/`) — env shape, privacy, coverage snapshot if present.
 - Secret scan in `scripts/check_env.sh` fails on `0x`+64-hex patterns under `contracts/`, `scripts/`, `src/`.
