@@ -83,7 +83,7 @@ def collect() -> tuple[list[tuple[str, str]], list[str], bool]:
         ["Python", sys.version.split()[0]],
         ["Executable", sys.executable],
         ["In venv", "yes" if _in_venv() else "no"],
-        ["Project .venv", "ready" if venv_ready else "missing (run scripts/setup_python.sh)"],
+        ["Project .venv", "ready" if venv_ready else "missing (run scripts/bootstrap/setup_python.sh)"],
         ["VIRTUAL_ENV", os.environ.get("VIRTUAL_ENV") or "(unset)"],
         ["PIP_REQUIRE_VIRTUALENV", os.environ.get("PIP_REQUIRE_VIRTUALENV") or "(unset)"],
         ["TERM", os.environ.get("TERM", "unknown")],
@@ -99,7 +99,22 @@ def collect() -> tuple[list[tuple[str, str]], list[str], bool]:
     return rows, notes, legacy
 
 
+def _env_secrets_ok() -> tuple[bool, str]:
+    env = ROOT / ".env"
+    if not env.is_file():
+        return True, ".env absent (OK for local-only)"
+    gi = ROOT / ".gitignore"
+    try:
+        ignored = gi.is_file() and ".env" in gi.read_text(encoding="utf-8")
+    except OSError:
+        ignored = False
+    if ignored:
+        return True, ".env present and gitignored"
+    return False, ".env present — add .env to .gitignore before committing"
+
+
 def privacy_checks() -> list[tuple[str, bool, str]]:
+    env_ok, env_detail = _env_secrets_ok()
     return [
         (
             "Core preflight is local-only",
@@ -113,8 +128,8 @@ def privacy_checks() -> list[tuple[str, bool, str]]:
         ),
         (
             "Secrets not in repo defaults",
-            not (ROOT / ".env").exists(),
-            ".env absent (good) or gitignored if present",
+            env_ok,
+            env_detail,
         ),
         (
             "data/ not assumed world-readable",
@@ -287,7 +302,7 @@ def main() -> int:
     # Soft recommendations
     actions: list[str] = []
     if not (_project_venv() / "bin" / "python").is_file():
-        actions.append("Create project venv: ./scripts/setup_python.sh")
+        actions.append("Create project venv: ./scripts/bootstrap/setup_python.sh")
     if not _in_venv() and (_project_venv() / "bin" / "python").is_file():
         actions.append("Prefer launcher: ./pipeline.sh preflight  (uses .venv)")
     if os.environ.get("PIP_REQUIRE_VIRTUALENV", "").lower() not in ("1", "true", "yes"):

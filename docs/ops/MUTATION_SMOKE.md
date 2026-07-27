@@ -27,7 +27,7 @@ AccountingVault still relies on **CEI on credits** for reentrancy safety; `nonRe
 ```bash
 export PATH="$HOME/.local/bin:$PATH"
 cd /path/to/secure_pipeline
-./scripts/mutation_smoke.sh
+./scripts/gates/mutation_smoke.sh
 ```
 
 ## Mutation used

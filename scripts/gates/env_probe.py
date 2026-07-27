@@ -16,7 +16,12 @@ import os
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+_LIB = Path(__file__).resolve().parent.parent / "lib"
+if str(_LIB) not in sys.path:
+    sys.path.insert(0, str(_LIB))
+from root import project_root  # noqa: E402
+
+ROOT = project_root(Path(__file__))
 
 
 def detect() -> str:
@@ -65,7 +70,7 @@ def main() -> int:
     if tier == "testnet":
         key_set = bool((os.environ.get("DEPLOYER_PRIVATE_KEY") or "").strip())
         print(f"  DEPLOYER_PRIVATE_KEY: {'set' if key_set else 'unset (cannot sign)'}")
-        print("  Docs: docs/NETWORK_OPS.md — never print secrets")
+        print("  Docs: docs/ops/NETWORK_OPS.md — never print secrets")
     else:
         print("  Safe default for make check / local deploy modules")
     print()

@@ -1,7 +1,7 @@
 /**
  * Secure Pipeline — Hardhat 2 config
  * Local-first: default network is hardhat (in-process). No remote RPC required.
- * Sepolia appears only when SEPOLIA_RPC_URL is set (see docs/NETWORK_OPS.md).
+ * Sepolia appears only when SEPOLIA_RPC_URL is set (see docs/ops/NETWORK_OPS.md).
  */
 const { loadEnv } = require("./scripts/load_env");
 loadEnv();

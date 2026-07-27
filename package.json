@@ -10,10 +10,11 @@
     "coverage": "hardhat coverage",
     "check": "./pipeline.sh check",
     "check:full": "make check-full",
-    "env-check": "./scripts/check_env.sh",
-    "slither": "./scripts/run_slither.sh",
+    "env-check": "./scripts/gates/check_env.sh",
+    "slither": "./scripts/analysis/run_slither.sh",
     "deploy:local": "hardhat ignition deploy ./ignition/modules/SecureVault.js",
-    "clean": "hardhat clean && rm -rf coverage coverage.json reports"
+    "clean": "hardhat clean && rm -rf coverage coverage.json reports",
+    "tree": "make tree"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-ignition": "^0.15.16",

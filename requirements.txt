@@ -1,6 +1,6 @@
 # Optional only — core pipeline preflight is pure stdlib.
 # Install inside the project venv:
-#   ./scripts/setup_python.sh --with-optional
+#   ./scripts/bootstrap/setup_python.sh --with-optional
 #   # or: .venv/bin/pip install -r requirements.txt
 #
 # Keep this list short. Legacy Mac / 16 GB — profile before adding weight.

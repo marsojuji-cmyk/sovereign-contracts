@@ -3,7 +3,8 @@
 # Local-first: uses Hardhat artifacts when present; no network required for analysis.
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=../lib/root.sh
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")/../lib" && pwd)/root.sh"
 cd "$ROOT"
 
 if [[ -x "$ROOT/.venv/bin/slither" ]]; then
@@ -16,9 +17,9 @@ ERROR: slither not found.
 
 Install into the project venv (never system Python):
 
-  ./scripts/setup_python.sh --with-slither
+  ./scripts/bootstrap/setup_python.sh --with-slither
 
-Docs: docs/STATIC_ANALYSIS.md
+Docs: docs/security/STATIC_ANALYSIS.md
 EOF
   exit 2
 fi
@@ -55,7 +56,7 @@ echo
 echo "==> Reports"
 echo "    checklist: $OUT_MD"
 echo "    json:      $OUT_JSON"
-echo "    triage:    docs/STATIC_ANALYSIS.md"
+echo "    triage:    docs/security/STATIC_ANALYSIS.md"
 echo
 
 if [[ "$code" -eq 0 ]]; then

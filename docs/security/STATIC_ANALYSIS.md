@@ -15,7 +15,7 @@
 ```bash
 cd /Volumes/Agent_Tenet10/Users/admin/agents/secure_pipeline   # or your clone
 export PATH="$HOME/.local/bin:$PATH"   # Node for Hardhat if needed
-./scripts/setup_python.sh --with-slither --force
+./scripts/bootstrap/setup_python.sh --with-slither --force
 # equivalent: .venv/bin/pip install -r requirements-slither.txt
 ```
 
@@ -35,7 +35,7 @@ Never: `pip install slither-analyzer` into system/Frameworks Python.
 ```bash
 make slither
 # or
-./scripts/run_slither.sh
+./scripts/analysis/run_slither.sh
 # or
 ./pipeline.sh slither
 ```
@@ -89,7 +89,7 @@ Test-only contracts (`contracts/test/AttackHelpers.sol`) intentionally look “b
 
 | Symptom | Fix |
 |---------|-----|
-| `slither not found` | `./scripts/setup_python.sh --with-slither` |
+| `slither not found` | `./scripts/bootstrap/setup_python.sh --with-slither` |
 | `cbor2` build / Rust error | Pin `cbor2==5.6.5` (see `requirements-slither.txt`) |
 | Compile framework errors | `npx hardhat compile` then re-run; script uses `--hardhat-ignore-compile` when artifacts exist |
 | Too many findings in tests | Ensure `--filter-paths` includes `contracts/test/` |

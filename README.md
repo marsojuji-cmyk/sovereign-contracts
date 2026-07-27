@@ -13,9 +13,10 @@ Constraints → local-first · stdlib Python core · venv-scoped optional deps �
 | Side | Role |
 |------|------|
 | **Hardhat 2** | Compile, test, Ignition deploy, verify (when keyed), coverage |
-| **Python 3** | Host preflight, future glue (stdlib-first) |
+| **Python 3** | Host preflight, gates, glue (stdlib-first) |
 | **SecureVault** | Owner-custody ETH vault scaffold |
 | **AccountingVault** | Pull/credit ledger (different threat model) |
+| **BuildManifestAnchor** | Event-only doctrine / LIBRARIAN anchors |
 
 ## Quickstart
 
@@ -23,11 +24,15 @@ Constraints → local-first · stdlib Python core · venv-scoped optional deps �
 cd /Users/admin/agents/secure_pipeline
 
 # one-time Python venv (if missing)
-./scripts/setup_python.sh
+make setup-python
+# or: ./scripts/bootstrap/setup_python.sh
 
 # full local gate
 make check
 # or: ./pipeline.sh check
+
+# see engineered layout
+make tree
 ```
 
 | Command | Effect |
@@ -44,10 +49,13 @@ make check
 | `make env-check` | Offline env shape + secret-pattern scan |
 | `make env-probe` | `PIPELINE_ENV=local\|local-node\|testnet` |
 | `make slither` | Static analysis (needs setup-slither) |
+| `make tree` | Print directory map |
 | `./pipeline.sh hardhat …` | raw Hardhat proxy |
 
-**Sepolia / verify:** [`docs/NETWORK_OPS.md`](docs/NETWORK_OPS.md) (no `make deploy-sepolia`).  
-**Slither:** [`docs/STATIC_ANALYSIS.md`](docs/STATIC_ANALYSIS.md) — `make setup-slither && make slither`.
+**Sepolia / verify:** [`docs/ops/NETWORK_OPS.md`](docs/ops/NETWORK_OPS.md) (no `make deploy-sepolia`).  
+**Slither:** [`docs/security/STATIC_ANALYSIS.md`](docs/security/STATIC_ANALYSIS.md) — `make setup-slither && make slither`.  
+**Docs index:** [`docs/README.md`](docs/README.md).  
+**Grok rules:** [`AGENTS.md`](AGENTS.md) + [`.grok/rules/`](.grok/rules/).
 
 npm mirrors:
 
@@ -62,40 +70,43 @@ npm run check
 
 ```
 secure_pipeline/
-├── pipeline.sh / Makefile
-├── hardhat.config.js
-├── contracts/
-│   ├── SecureVault.sol        # owner custody
-│   ├── AccountingVault.sol    # pull/credit ledger
-│   └── test/AttackHelpers.sol # reentrancy probes
+├── AGENTS.md · README.md · Makefile · pipeline.sh
+├── hardhat.config.js · package.json · slither.config.json
+├── .grok/
+│   ├── agents/pipeline.md     # project agent (grok-build)
+│   └── rules/                 # auto-loaded structure + gates
+├── contracts/                 # SecureVault · AccountingVault · BuildManifestAnchor
+│   └── test/AttackHelpers.sol
 ├── test/                      # unit + safety + invariants
 ├── ignition/modules/
-├── docs/THREAT_MODELS.md
-├── docs/NETWORK_OPS.md        # Phase 3: optional Sepolia / verify
-├── docs/STATIC_ANALYSIS.md    # Phase 4: Slither
-├── requirements-slither.txt
-├── slither.config.json
-├── scripts/setup_python.sh
-├── scripts/run_slither.sh
-├── scripts/check_env.sh
-├── src/preflight.py
-└── AGENTS.md
+├── src/preflight.py           # host preflight → data/health.json
+├── scripts/
+│   ├── lib/                   # root resolvers (sh/py/js)
+│   ├── bootstrap/             # setup_python
+│   ├── gates/                 # env-check · coverage · mutation · probe
+│   ├── analysis/              # slither
+│   ├── ops/                   # sepolia · manifest · wallet
+│   ├── host/                  # mac_clean
+│   └── load_env.js            # Hardhat .env loader (stable path)
+├── docs/
+│   ├── README.md              # index
+│   ├── ops/ · security/ · doctrine/ · nexus-sov/
+├── data/ · logs/ · reports/   # local runtime (gitignored)
+└── artifacts/ · cache/        # Hardhat outputs (gitignored)
 ```
 
 ## Python doctrine
 
-Same as `grok-terminal-ethos` / ClearBlock:
-
 1. Stdlib runs without pip.
 2. Packages only inside `.venv`.
-3. Optional `rich` via `./scripts/setup_python.sh --with-optional`.
+3. Optional `rich` via `make setup-python` then `./scripts/bootstrap/setup_python.sh --with-optional`.
 4. Shell guard: `PIP_REQUIRE_VIRTUALENV=1` (in `~/.zshrc`).
 
 ## Security notes
 
 - **No private keys in git.** Use `.env` locally; see `.env.example`.
 - Default network is **in-process Hardhat** — no RPC, no funds at risk.
-- Contracts are **teaching scaffolds**, not audited products. See `docs/THREAT_MODELS.md`.
+- Contracts are **teaching scaffolds**, not audited products. See `docs/security/THREAT_MODELS.md`.
 - Etherscan verify stays inert until `ETHERSCAN_API_KEY` is set.
 
 ## Current status
@@ -104,14 +115,13 @@ Same as `grok-terminal-ethos` / ClearBlock:
 |------|--------|
 | Python preflight | Ready |
 | Compile (0.8.28) | Ready |
-| Tests | 25 passing (unit + safety + invariants) |
+| Tests | unit + safety + invariants |
 | Coverage | ~100% stmts/lines on production contracts |
-| Ignition local deploy | SecureVault + AccountingVault |
-| Network ops docs | `docs/NETWORK_OPS.md` (Phase 3) |
+| Ignition local deploy | SecureVault + AccountingVault + BuildManifestAnchor |
+| Network ops docs | `docs/ops/NETWORK_OPS.md` (Phase 3) |
 | Sepolia in Hardhat | Only if `SEPOLIA_RPC_URL` set |
 | Live deploy / verify | Opt-in; not part of `make check` |
-| Phase 2–4 | Done (Slither via setup-slither) |
-| Phase 5 | health.json · coverage-gate · secret scan · env-probe · check-full doctrine |
+| Phase 2–5 | Done (gates + engineered layout) |
 
 ## Doctrine
 

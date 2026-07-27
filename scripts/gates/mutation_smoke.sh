@@ -3,7 +3,8 @@
 # Local-only. Never commits. Restores contracts/ via git even on failure.
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=../lib/root.sh
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")/../lib" && pwd)/root.sh"
 cd "$ROOT"
 export PATH="${HOME}/.local/bin:${PATH}"
 
@@ -46,7 +47,7 @@ new = (
     "// MUTATION_SMOKE: nonReentrant stripped — DO NOT COMMIT"
 )
 if old not in t:
-    raise SystemExit("mutation target string not found — update scripts/mutation_smoke.sh")
+    raise SystemExit("mutation target string not found — update scripts/gates/mutation_smoke.sh")
 p.write_text(t.replace(old, new, 1), encoding="utf-8")
 print("    applied:", old)
 print("    ->", new)

@@ -3,7 +3,8 @@
 # Never prints secret values. Never calls RPC.
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=../lib/root.sh
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")/../lib" && pwd)/root.sh"
 cd "$ROOT"
 
 # Load .env into this shell only if present (same rules as hardhat helper)
@@ -142,7 +143,7 @@ if [[ "$hits" -gt 0 ]]; then
 fi
 
 echo
-echo "Docs: docs/NETWORK_OPS.md"
+echo "Docs: docs/ops/NETWORK_OPS.md"
 echo "Local gate still: make check  (no env required)"
 echo "Contracts diff gate: make check-full"
 echo

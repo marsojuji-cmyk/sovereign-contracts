@@ -1,5 +1,5 @@
 # Optional static analysis — install only into project .venv
-#   ./scripts/setup_python.sh --with-slither
+#   ./scripts/bootstrap/setup_python.sh --with-slither
 #
 # Dual-boot reality (Sonoma CLT Python 3.9 vs Monterey Framework 3.10+):
 #   - slither-analyzer 0.11.5 requires Python >= 3.10

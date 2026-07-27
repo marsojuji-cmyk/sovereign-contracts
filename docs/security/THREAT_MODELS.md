@@ -41,3 +41,17 @@ Payers ──ETH──► credit[account] ──withdraw──► same account (
 | `test/invariants.js` | Random multi-actor loops preserve solvency & custody rules |
 
 Reentrancy via `receive()` often surfaces as **`TransferFailed`** on the outer call (inner guard reverts the ETH transfer). Funds still stay put.
+
+## BuildManifestAnchor — manifest publisher (no custody)
+
+```
+Owner ──anchor(hash, label, version)──► event log (no stored state beyond owner)
+```
+
+| Threat | Mitigation in scaffold |
+|--------|------------------------|
+| Forged manifest attribution | `onlyOwner` on `anchor` |
+| Zero / garbage hash | `ZeroHash` |
+| Owner takeover | `transferOwnership` with `ZeroAddress` guard |
+
+**Residual risk:** Owner can emit arbitrary labels; off-chain readers must verify `contentHash` against real files. Events are not replay-protected across chains — treat chain + address + log index as context.

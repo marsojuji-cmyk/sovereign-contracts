@@ -3,7 +3,8 @@
 # Local-first · project venv only · no system site-packages pollution
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=../lib/root.sh
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")/../lib" && pwd)/root.sh"
 cd "$ROOT"
 
 WITH_OPTIONAL=0
@@ -12,7 +13,7 @@ FORCE=0
 
 usage() {
   cat <<'EOF'
-Usage: ./scripts/setup_python.sh [--with-optional] [--with-slither] [--force]
+Usage: ./scripts/bootstrap/setup_python.sh [--with-optional] [--with-slither] [--force]
 
   Creates .venv with stdlib venv (no pyenv/conda required).
   Core pipeline scripts need zero pip packages.
@@ -101,5 +102,5 @@ echo "==> Bootstrap complete"
 echo "    Interpreter: $PY"
 "$PY" -c 'import sys; print("    Version:    ", sys.version.split()[0])'
 echo "    Preflight:   ./pipeline.sh preflight"
-echo "    Optional:    ./scripts/setup_python.sh --with-optional"
-echo "    Slither:     ./scripts/setup_python.sh --with-slither && make slither"
+echo "    Optional:    ./scripts/bootstrap/setup_python.sh --with-optional"
+echo "    Slither:     ./scripts/bootstrap/setup_python.sh --with-slither && make slither"

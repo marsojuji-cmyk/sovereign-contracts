@@ -6,8 +6,8 @@ Reads Istanbul/nyc coverage-final.json (or coverage.json).
 Does NOT re-run hardhat coverage — call after `make coverage`.
 
 Usage:
-  python3 scripts/coverage_floor.py
-  python3 scripts/coverage_floor.py --min 100
+  python3 scripts/gates/coverage_floor.py
+  python3 scripts/gates/coverage_floor.py --min 100
 """
 from __future__ import annotations
 
@@ -16,10 +16,16 @@ import json
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+_LIB = Path(__file__).resolve().parent.parent / "lib"
+if str(_LIB) not in sys.path:
+    sys.path.insert(0, str(_LIB))
+from root import project_root  # noqa: E402
+
+ROOT = project_root(Path(__file__))
 PRODUCTION = (
     "contracts/SecureVault.sol",
     "contracts/AccountingVault.sol",
+    "contracts/BuildManifestAnchor.sol",
 )
 
 

@@ -12,7 +12,7 @@ if [[ -x "$ROOT/.venv/bin/python" ]]; then
 elif command -v python3 >/dev/null 2>&1; then
   PY="$(command -v python3)"
 else
-  echo "ERROR: python3 not found. Run: ./scripts/setup_python.sh" >&2
+  echo "ERROR: python3 not found. Run: ./scripts/bootstrap/setup_python.sh" >&2
   exit 1
 fi
 
@@ -38,8 +38,9 @@ Secure Pipeline
   ./pipeline.sh hardhat ...     Proxy to npx hardhat
 
 Ethos: local-first · no global pip · optional deps only in .venv
-Sepolia ops: docs/NETWORK_OPS.md (explicit commands only)
-Slither:     docs/STATIC_ANALYSIS.md
+Layout:  make tree · docs/README.md · AGENTS.md
+Sepolia: docs/ops/NETWORK_OPS.md (explicit commands only)
+Slither: docs/security/STATIC_ANALYSIS.md
 EOF
 }
 
@@ -68,10 +69,10 @@ case "$cmd" in
     "$PY" -c 'import sys; print(sys.version)'
     ;;
   setup)
-    exec bash "$ROOT/scripts/setup_python.sh" "$@"
+    exec bash "$ROOT/scripts/bootstrap/setup_python.sh" "$@"
     ;;
   setup-optional)
-    exec bash "$ROOT/scripts/setup_python.sh" --with-optional "$@"
+    exec bash "$ROOT/scripts/bootstrap/setup_python.sh" --with-optional "$@"
     ;;
   compile)
     need_npx
@@ -98,10 +99,10 @@ case "$cmd" in
     exec npx hardhat ignition deploy ./ignition/modules/SecureVault.js "$@"
     ;;
   env-check)
-    exec bash "$ROOT/scripts/check_env.sh" "$@"
+    exec bash "$ROOT/scripts/gates/check_env.sh" "$@"
     ;;
   slither|static)
-    exec bash "$ROOT/scripts/run_slither.sh" "$@"
+    exec bash "$ROOT/scripts/analysis/run_slither.sh" "$@"
     ;;
   hardhat|hh)
     need_npx

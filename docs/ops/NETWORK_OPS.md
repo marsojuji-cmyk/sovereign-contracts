@@ -54,7 +54,7 @@ export ETHERSCAN_API_KEY='…'
 Validate shape **without** calling the network:
 
 ```bash
-./scripts/check_env.sh
+./scripts/gates/check_env.sh
 # or: make env-check
 ```
 
@@ -103,7 +103,7 @@ npx hardhat ignition deploy ./ignition/modules/SecureVault.js --network localhos
 1. `make check` green locally.  
 2. Burner wallet; **never** a mainnet cold wallet.  
 3. Sepolia ETH from a public faucet (you obtain this yourself).  
-4. `.env` filled or exports set; `./scripts/check_env.sh` OK.
+4. `.env` filled or exports set; `./scripts/gates/check_env.sh` OK.
 
 ### 1. Dry-run mental checklist (no broadcast)
 
@@ -158,7 +158,9 @@ If verify fails with “already verified,” treat as success. If constructor ar
 |--------|---------|-------------|
 | Local gate | `make check` | None |
 | Env shape | `make env-check` | None |
+| Sepolia dry-run | `make sepolia-dry-run` | None by default; read-only `chainId` if RPC set |
 | Local deploy | `make deploy-local` | None (in-process) |
+| Manifest anchor (local) | `make deploy-manifest` | None (in-process) |
 | List networks | `npx hardhat` (see config) | None |
 | Sepolia deploy | `npx hardhat ignition deploy … --network sepolia` | Yes — broadcast |
 | Verify | `npx hardhat verify --network sepolia …` | Yes — explorer API |
@@ -197,7 +199,7 @@ This repo intentionally has **no** `make deploy-sepolia` target. Network deploys
 
 ## Success criteria (this phase)
 
-- [x] Network ops documented (`docs/NETWORK_OPS.md`)  
+- [x] Network ops documented (`docs/ops/NETWORK_OPS.md`)  
 - [x] `.env.example` lists only needed keys  
 - [x] Hardhat config can attach Sepolia **only** from env  
 - [x] `make check` still requires zero RPC  
