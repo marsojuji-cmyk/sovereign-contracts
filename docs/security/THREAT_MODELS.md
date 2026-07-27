@@ -5,7 +5,9 @@ Local-first teaching notes for the two production scaffolds.
 ## SecureVault — owner custody
 
 ```
-Depositors ──ETH──► [ shared balance ] ──withdraw──► owner-chosen recipient
+Depositors ──ETH──► [ shared balance ] ──withdraw / withdrawAll──► owner-chosen recipient
+                         ▲
+                         └── pause freezes deposit + withdraw
 ```
 
 | Threat | Mitigation in scaffold |
@@ -14,8 +16,10 @@ Depositors ──ETH──► [ shared balance ] ──withdraw──► owner-c
 | Reentrancy on withdraw | `nonReentrant` + CEI order |
 | Transfer to rejecting contract | `TransferFailed` |
 | Zero-address owner / recipient | `ZeroAddress` |
+| Accidental one-tx ownership handoff | Two-step: `transferOwnership` → `acceptOwnership` (+ cancel) |
+| Emergency ops freeze | `pause` / `unpause` (deposits + withdrawals) |
 
-**Residual risk:** compromised owner key drains everything. Not multi-sig / timelock.
+**Residual risk:** compromised owner (or accepted pending owner) drains everything. Not multi-sig / timelock.
 
 ## AccountingVault — pull ledger
 

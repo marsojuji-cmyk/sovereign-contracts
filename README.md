@@ -121,7 +121,8 @@ secure_pipeline/
 | Network ops docs | `docs/ops/NETWORK_OPS.md` (Phase 3) |
 | Sepolia in Hardhat | Only if `SEPOLIA_RPC_URL` set |
 | Live deploy / verify | Opt-in; not part of `make check` |
-| Phase 2–5 | Done (gates + engineered layout) |
+| Phase 2–5b | Done (gates + engineered layout + BuildManifestAnchor) |
+| Phase 6 | **Done — Assurance** (coverage · mutation · env · ops dry path; see `AGENTS.md`) |
 
 ## Doctrine
 

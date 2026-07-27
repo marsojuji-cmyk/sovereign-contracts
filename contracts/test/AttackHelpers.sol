@@ -29,6 +29,11 @@ contract SecureVaultReentrancyAttacker {
         vault = vault_;
     }
 
+    /// @notice Complete two-step ownership after EOA proposes this contract as owner.
+    function acceptOwnership() external {
+        vault.acceptOwnership();
+    }
+
     /// @notice Fund the vault then attempt a reentrant withdraw to this contract.
     function attack(uint256 amount) external {
         attackAmount = amount;

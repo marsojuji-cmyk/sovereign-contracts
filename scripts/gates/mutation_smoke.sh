@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Mutation smoke — prove the suite catches a deliberate safety regression, then restore.
-# Local-only. Never commits. Restores contracts/ via git even on failure.
+# Local-only. Never commits. Restores via pre-mutation file backup (safe for dirty trees).
 set -euo pipefail
 
 # shellcheck source=../lib/root.sh
@@ -9,15 +9,20 @@ cd "$ROOT"
 export PATH="${HOME}/.local/bin:${PATH}"
 
 TARGET="contracts/SecureVault.sol"
+BACKUP="contracts/SecureVault.sol.mutation-bak"
 MARKER="// MUTATION_SMOKE: nonReentrant stripped — DO NOT COMMIT"
 
 cleanup() {
-  # Always restore production sources
-  git checkout -- "$TARGET" 2>/dev/null || true
+  # Always restore from the pre-mutation backup (do NOT git checkout — that
+  # would wipe uncommitted SecureVault work on a dirty tree).
+  if [[ -f "$BACKUP" ]]; then
+    mv -f "$BACKUP" "$TARGET"
+  fi
   if grep -q "MUTATION_SMOKE" "$TARGET" 2>/dev/null; then
     echo "ERROR: mutation still present after cleanup" >&2
     exit 3
   fi
+  rm -f "$BACKUP"
 }
 trap cleanup EXIT
 
@@ -37,6 +42,7 @@ npx hardhat test test/SecureVault.safety.js
 echo
 
 echo "==> 2/4 Apply mutation"
+cp "$TARGET" "$BACKUP"
 python3 - <<'PY'
 from pathlib import Path
 p = Path("contracts/SecureVault.sol")
@@ -69,7 +75,10 @@ echo "✓ mutation detected (hardhat exit $mut_code)"
 echo
 
 echo "==> 4/4 Restore + baseline again (must pass)"
-git checkout -- "$TARGET"
+# restore early for the re-baseline; trap still runs (idempotent if bak already moved)
+if [[ -f "$BACKUP" ]]; then
+  mv -f "$BACKUP" "$TARGET"
+fi
 npx hardhat test test/SecureVault.safety.js
 echo
 echo "✓ mutation smoke passed (bite confirmed + restored)"

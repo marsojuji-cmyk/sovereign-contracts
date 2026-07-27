@@ -2,7 +2,7 @@
 
 | Contract | Threat model | Role |
 |----------|--------------|------|
-| `SecureVault.sol` | **Owner custody** — one owner can drain the pot | Ownable ETH vault (push withdraw) |
+| `SecureVault.sol` | **Owner custody** — one owner can drain the pot | Ownable ETH vault: push withdraw, pause, two-step ownership, `withdrawAll` |
 | `AccountingVault.sol` | **Per-user credit / pull** — no shared owner drain | Ledger + self-service withdraw |
 | `BuildManifestAnchor.sol` | **Event-only** — no fund custody | LIBRARIAN / doctrine content-hash anchors |
 | `test/AttackHelpers.sol` | Test-only | Reentrancy + reject-ETH probes |

@@ -68,7 +68,7 @@ After filtering test helpers, Slither reports intentional patterns:
 
 | Detector | Where | Disposition |
 |----------|-------|-------------|
-| `low-level-calls` | `SecureVault.withdraw`, `AccountingVault.withdraw` | **Accepted** — deliberate `call{value:}` with success check, CEI, `nonReentrant` |
+| `low-level-calls` | `SecureVault.withdraw` / `withdrawAll`, `AccountingVault.withdraw` | **Accepted** — deliberate `call{value:}` with success check, CEI, `nonReentrant` |
 
 These are **informational**. They document the ETH transfer primitive; they are not untreated reentrancy.
 

@@ -121,8 +121,22 @@ Print this map anytime: `make tree`.
 - [x] Phase 4 — Optional Slither (venv; cbor2 pin for Python 3.14)
 - [x] Phase 5 — Self-assessing gates: health.json, coverage floor, secret scan, env probe
 - [x] Phase 5b — Engineered layout (role-nested scripts/docs + Grok rules)
+- [x] **Phase 6 — Assurance** — coverage floor habit, mutation bite, env discipline, ops dry-path trust; **no new contracts / no live network spend**
 
-## Gates (Phase 5)
+### Phase 6 WBS (assurance) — complete
+
+| ID | Focus | Done when | Evidence |
+|----|--------|-----------|----------|
+| M0 | Baseline freeze | Roadmap stub + inventory after 5b | AGENTS + README Phase 6 |
+| M1 | Coverage floor | `make coverage && make coverage-gate` green | 100% stmts on production vaults |
+| M2 | Mutation bite | `make mutation-smoke` green | nonReentrant strip → test fails → restore |
+| M3 | Env / secrets | `make env-check` + `make env-probe` green | offline shape OK; `PIPELINE_ENV=testnet` |
+| M4 | Ops dry path | `make sepolia-dry-run` + `make manifest-hash` | local Ignition + chainId probe; **no broadcast** |
+| M5 | Ship package | Gates re-proven; reviewable docs; dossier 100% | this closeout |
+
+**Out of scope (Phase 6, held):** mainnet, live Sepolia deploy, multi-sig, new vault Solidity, system pip, secrets in Calendar/Notes.
+
+## Gates (Phase 5+)
 
 | Gate | Command | When |
 |------|---------|------|

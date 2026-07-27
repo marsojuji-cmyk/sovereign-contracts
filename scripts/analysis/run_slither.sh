@@ -34,6 +34,8 @@ fi
 mkdir -p "$ROOT/reports"
 OUT_MD="$ROOT/reports/slither-checklist.md"
 OUT_JSON="$ROOT/reports/slither.json"
+# Slither refuses to overwrite an existing --json path (exit 255 noise).
+rm -f "$OUT_JSON" "$OUT_MD"
 
 echo "==> Slither: $SLITHER"
 "$SLITHER" --version

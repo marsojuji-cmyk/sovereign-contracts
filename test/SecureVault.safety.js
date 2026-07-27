@@ -19,7 +19,9 @@ describe("SecureVault safety extras", function () {
     const attacker = await Attacker.deploy(await vault.getAddress());
     await attacker.waitForDeployment();
 
+    // Two-step ownership: propose then attacker accepts.
     await vault.connect(funder).transferOwnership(await attacker.getAddress());
+    await attacker.acceptOwnership();
     return { vault, attacker, funder, other };
   }
 
@@ -53,6 +55,26 @@ describe("SecureVault safety extras", function () {
 
     await expect(
       vault.withdraw(await reject.getAddress(), amount)
+    ).to.be.revertedWithCustomError(vault, "TransferFailed");
+
+    expect(await vault.balance()).to.equal(amount);
+  });
+
+  it("reverts TransferFailed on withdrawAll to rejecting recipient", async function () {
+    const [owner] = await ethers.getSigners();
+    const Vault = await ethers.getContractFactory("SecureVault");
+    const vault = await Vault.deploy(owner.address);
+    await vault.waitForDeployment();
+
+    const Reject = await ethers.getContractFactory("RejectEther");
+    const reject = await Reject.deploy();
+    await reject.waitForDeployment();
+
+    const amount = ethers.parseEther("0.25");
+    await vault.deposit({ value: amount });
+
+    await expect(
+      vault.withdrawAll(await reject.getAddress())
     ).to.be.revertedWithCustomError(vault, "TransferFailed");
 
     expect(await vault.balance()).to.equal(amount);
