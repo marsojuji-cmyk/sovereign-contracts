@@ -1,5 +1,5 @@
 {
-  "name": "secure-pipeline",
+  "name": "sovereign-contracts",
   "version": "0.1.0",
   "private": true,
   "description": "Local-first Hardhat + Python secure contract pipeline",
