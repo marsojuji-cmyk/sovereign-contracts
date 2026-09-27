@@ -1,4 +1,4 @@
-# Secure Pipeline
+# Sovereign Contracts
 
 Local-first **Hardhat 2 + Python** workspace for sovereign contract work.
 
