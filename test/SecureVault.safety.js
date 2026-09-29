@@ -1,6 +1,11 @@
-const { expect } = require("chai");
-const { ethers } = require("hardhat");
-const { loadFixture } = require("@nomicfoundation/hardhat-toolbox/network-helpers");
+import { expect } from "chai";
+import hre from "hardhat";
+
+// Single shared connection for the whole file (Hardhat 3: no global hre.ethers).
+// create() gives this file its own connection; the deprecated connect() is avoided.
+const connection = await hre.network.create();
+const ethers = connection.ethers;
+const networkHelpers = connection.networkHelpers;
 
 /**
  * Phase 2 safety extras for SecureVault:
@@ -26,7 +31,7 @@ describe("SecureVault safety extras", function () {
   }
 
   it("blocks reentrant withdraw when owner is a malicious contract", async function () {
-    const { vault, attacker, funder } = await loadFixture(deployWithAttackerOwner);
+    const { vault, attacker, funder } = await networkHelpers.loadFixture(deployWithAttackerOwner);
     // Deposit 2 ETH and reenter with 1 ETH each time. Without nonReentrant, the
     // attacker can pull twice (balance-only accounting); CEI-on-balance alone
     // does NOT stop that when amount < full balance. Use 2x so missing guard fails.

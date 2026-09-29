@@ -22,7 +22,7 @@ export PATH="$HOME/.local/bin:$PATH"   # Node for Hardhat if needed
 | Package | Pin | Why |
 |---------|-----|-----|
 | `cbor2` | `5.6.5` | wheel-friendly / avoids Rust builds on odd Pythons |
-| `slither-analyzer` | `0.11.3` if Python **&lt; 3.10**; `0.11.5` if **≥ 3.10** | 0.11.5 needs 3.10+; Sonoma CLT is often 3.9 |
+| `slither-analyzer` | `0.11.3` if Python **&lt; 3.10**; `0.11.6` if **≥ 3.10** | 0.11.6 needs 3.10+ and parses Hardhat 3 artifacts; Sonoma CLT is often 3.9 |
 
 **Dual-boot note:** A `.venv` built on Monterey (e.g. Framework Python 3.14) will break on Sonoma if that interpreter is missing. `setup_python.sh` now recreates broken venvs. Prefer re-running setup on the boot you use for `make check-full`.
 
@@ -91,7 +91,7 @@ Test-only contracts (`contracts/test/AttackHelpers.sol`) intentionally look “b
 |---------|-----|
 | `slither not found` | `./scripts/bootstrap/setup_python.sh --with-slither` |
 | `cbor2` build / Rust error | Pin `cbor2==5.6.5` (see `requirements-slither.txt`) |
-| Compile framework errors | `npx hardhat compile` then re-run; script uses `--hardhat-ignore-compile` when artifacts exist |
+| Compile framework errors | `npx hardhat build` then re-run; script uses `--hardhat-ignore-compile` when artifacts exist |
 | Too many findings in tests | Ensure `--filter-paths` includes `contracts/test/` |
 
 ---

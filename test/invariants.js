@@ -1,6 +1,11 @@
-const { expect } = require("chai");
-const { ethers } = require("hardhat");
-const { loadFixture } = require("@nomicfoundation/hardhat-toolbox/network-helpers");
+import { expect } from "chai";
+import hre from "hardhat";
+
+// Single shared connection for the whole file (Hardhat 3: no global hre.ethers).
+// create() gives this file its own connection; the deprecated connect() is avoided.
+const connection = await hre.network.create();
+const ethers = connection.ethers;
+const networkHelpers = connection.networkHelpers;
 
 /**
  * Lightweight invariant / property tests (Hardhat-native "fuzz" loops).
@@ -29,7 +34,7 @@ describe("Invariants — AccountingVault solvency", function () {
   }
 
   it("totalCredit == nativeBalance after random deposit/withdraw sequences", async function () {
-    const { vault, actors } = await loadFixture(deployFixture);
+    const { vault, actors } = await networkHelpers.loadFixture(deployFixture);
     const rand = rng(0xc0ffee);
     const rounds = 40;
 
@@ -65,7 +70,7 @@ describe("Invariants — AccountingVault solvency", function () {
   });
 
   it("no user can withdraw more than their credit (direct probes)", async function () {
-    const { vault, actors } = await loadFixture(deployFixture);
+    const { vault, actors } = await networkHelpers.loadFixture(deployFixture);
     const [alice, bob] = actors;
     await vault.connect(alice).deposit({ value: ethers.parseEther("1") });
     await vault.connect(bob).deposit({ value: ethers.parseEther("2") });
@@ -93,7 +98,7 @@ describe("Invariants — SecureVault custody", function () {
   }
 
   it("only owner can reduce balance; deposits always increase balance", async function () {
-    const { vault, owner, alice, bob } = await loadFixture(deployFixture);
+    const { vault, owner, alice, bob } = await networkHelpers.loadFixture(deployFixture);
     const rand = rng(0xbadc0de);
     let expected = 0n;
 

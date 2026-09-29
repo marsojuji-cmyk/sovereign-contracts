@@ -17,7 +17,7 @@ help:
 	@echo "  make setup-slither       .venv + Slither (Phase 4+)"
 	@echo "  make compile             solc via Hardhat"
 	@echo "  make test                Unit + safety + invariant tests"
-	@echo "  make coverage            solidity-coverage report"
+	@echo "  make coverage            Hardhat 3 built-in coverage (lcov + HTML)"
 	@echo "  make coverage-gate       Require 100% stmt on production vaults (needs report)"
 	@echo "  make check               preflight + compile + test (fast dev gate)"
 	@echo "  make slither             Static analysis (requires setup-slither)"
@@ -50,13 +50,13 @@ setup-slither:
 	@bash $(ROOT)scripts/bootstrap/setup_python.sh --with-slither
 
 compile:
-	@npx hardhat compile
+	@npx hardhat build
 
 test:
 	@npx hardhat test
 
 coverage:
-	@npx hardhat coverage
+	@npx hardhat test --coverage
 
 # Uses existing report; does not re-run coverage (keeps gate intentional).
 coverage-gate:

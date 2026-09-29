@@ -1,6 +1,11 @@
-const { expect } = require("chai");
-const { ethers } = require("hardhat");
-const { loadFixture } = require("@nomicfoundation/hardhat-toolbox/network-helpers");
+import { expect } from "chai";
+import hre from "hardhat";
+
+// Single shared connection for the whole file (Hardhat 3: no global hre.ethers).
+// create() gives this file its own connection; the deprecated connect() is avoided.
+const connection = await hre.network.create();
+const ethers = connection.ethers;
+const networkHelpers = connection.networkHelpers;
 
 describe("BuildManifestAnchor", function () {
   async function deployFixture() {
@@ -13,7 +18,7 @@ describe("BuildManifestAnchor", function () {
 
   describe("deployment", function () {
     it("sets owner", async function () {
-      const { anchor, owner } = await loadFixture(deployFixture);
+      const { anchor, owner } = await networkHelpers.loadFixture(deployFixture);
       expect(await anchor.owner()).to.equal(owner.address);
     });
 
@@ -28,7 +33,7 @@ describe("BuildManifestAnchor", function () {
 
   describe("anchor", function () {
     it("emits ManifestAnchored for owner", async function () {
-      const { anchor, owner } = await loadFixture(deployFixture);
+      const { anchor, owner } = await networkHelpers.loadFixture(deployFixture);
       const hash = ethers.keccak256(ethers.toUtf8Bytes("LIBRARIAN:v1:BUILD_FRAME"));
       await expect(anchor.anchor(hash, "BUILD_FRAME_NEXUS", "2026-07-10"))
         .to.emit(anchor, "ManifestAnchored")
@@ -36,7 +41,7 @@ describe("BuildManifestAnchor", function () {
     });
 
     it("reverts zero hash", async function () {
-      const { anchor } = await loadFixture(deployFixture);
+      const { anchor } = await networkHelpers.loadFixture(deployFixture);
       await expect(anchor.anchor(ethers.ZeroHash, "x", "1")).to.be.revertedWithCustomError(
         anchor,
         "ZeroHash"
@@ -44,7 +49,7 @@ describe("BuildManifestAnchor", function () {
     });
 
     it("reverts when non-owner anchors", async function () {
-      const { anchor, alice } = await loadFixture(deployFixture);
+      const { anchor, alice } = await networkHelpers.loadFixture(deployFixture);
       const hash = ethers.keccak256(ethers.toUtf8Bytes("nope"));
       await expect(anchor.connect(alice).anchor(hash, "x", "1")).to.be.revertedWithCustomError(
         anchor,
@@ -55,7 +60,7 @@ describe("BuildManifestAnchor", function () {
 
   describe("ownership", function () {
     it("transfers ownership", async function () {
-      const { anchor, owner, alice } = await loadFixture(deployFixture);
+      const { anchor, owner, alice } = await networkHelpers.loadFixture(deployFixture);
       await expect(anchor.transferOwnership(alice.address))
         .to.emit(anchor, "OwnershipTransferred")
         .withArgs(owner.address, alice.address);
@@ -63,7 +68,7 @@ describe("BuildManifestAnchor", function () {
     });
 
     it("rejects zero-address transfer", async function () {
-      const { anchor } = await loadFixture(deployFixture);
+      const { anchor } = await networkHelpers.loadFixture(deployFixture);
       await expect(anchor.transferOwnership(ethers.ZeroAddress)).to.be.revertedWithCustomError(
         anchor,
         "ZeroAddress"

@@ -19,14 +19,14 @@ tier="$(grep '^PIPELINE_ENV=' /tmp/sp_env_probe.txt | head -1 | cut -d= -f2)"
 echo
 
 echo "Compile"
-npx hardhat compile
+npx hardhat build
 echo
 
 echo "Ignition module exercise (hardhat / ephemeral)"
 for mod in SecureVault AccountingVault BuildManifestAnchor; do
   echo "  → $mod"
   npx hardhat ignition deploy "./ignition/modules/${mod}.js" \
-    --network hardhat \
+    --network default \
     --deployment-id "dryrun-${mod}"
 done
 echo
@@ -37,8 +37,8 @@ if [[ "$tier" == "testnet" ]]; then
   echo
   if [[ "${SECURE_PIPELINE_CONFIRM_SEPOLIA_BROADCAST:-}" == "1" ]]; then
     echo "Broadcast opt-in detected — live Ignition on sepolia (BuildManifestAnchor only)."
-    owner="$(node -e "require('./scripts/load_env').loadEnv();const {ethers}=require('ethers');console.log(new ethers.Wallet(process.env.DEPLOYER_PRIVATE_KEY).address);")"
-    bal="$(node -e "require('./scripts/load_env').loadEnv();const {ethers}=require('ethers');const p=new ethers.JsonRpcProvider(process.env.SEPOLIA_RPC_URL);const w=new ethers.Wallet(process.env.DEPLOYER_PRIVATE_KEY,p);p.getBalance(w.address).then(b=>console.log(b.toString()));")"
+    owner="$(node --input-type=module -e "import { loadEnv } from './scripts/load_env.js'; import { ethers } from 'ethers'; loadEnv(); console.log(new ethers.Wallet(process.env.DEPLOYER_PRIVATE_KEY).address);")"
+    bal="$(node --input-type=module -e "import { loadEnv } from './scripts/load_env.js'; import { ethers } from 'ethers'; loadEnv(); const p=new ethers.JsonRpcProvider(process.env.SEPOLIA_RPC_URL); const w=new ethers.Wallet(process.env.DEPLOYER_PRIVATE_KEY,p); p.getBalance(w.address).then(b=>console.log(b.toString()));")"
     if [[ "$bal" == "0" ]]; then
       echo "✗ deployer $owner has 0 Sepolia ETH — fund from a faucet, then re-run."
       echo "  export SECURE_PIPELINE_CONFIRM_SEPOLIA_BROADCAST=1"

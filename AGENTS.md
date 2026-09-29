@@ -17,7 +17,7 @@ Hardhat owns Solidity; Python owns host checks, glue scripts, and optional analy
 
 | Layer | Tool | Notes |
 |-------|------|--------|
-| Contracts | Hardhat 2 + toolbox | compile, test, coverage |
+| Contracts | Hardhat 3 + toolbox-mocha-ethers | compile, test, coverage |
 | Deploy | Hardhat Ignition | declarative modules under `ignition/` |
 | Verify | hardhat-verify | needs `ETHERSCAN_API_KEY` (optional) |
 | Host / glue | Python 3.14+ stdlib | preflight; future scripts |
@@ -155,7 +155,7 @@ Print this map anytime: `make tree`.
 ```
 Plan: Work inside secure_pipeline using AGENTS.md ethos.
 Path: /Users/admin/agents/secure_pipeline (or local clone).
-Stack: Hardhat 2 for Solidity; Python stdlib-first + optional .venv.
+Stack: Hardhat 3 for Solidity; Python stdlib-first + optional .venv.
 Layout: make tree · docs/README.md · .grok/rules/
 Hardware: 2015-class Intel MBP — lightweight, no global pip installs.
 Privacy: local-only core; no telemetry; no secrets in git.

@@ -17,6 +17,7 @@ cache/
 artifacts/
 typechain/
 typechain-types/
+types/
 coverage/
 coverage.json
 gasReporterOutput.json

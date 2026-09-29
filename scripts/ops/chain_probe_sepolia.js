@@ -1,10 +1,11 @@
 /**
  * Read-only Sepolia chainId probe. No deploy, no keys printed.
  */
-const hre = require("hardhat");
+import hre from "hardhat";
 
 async function main() {
-  const net = await hre.ethers.provider.getNetwork();
+  const { ethers } = await hre.network.create("sepolia");
+  const net = await ethers.provider.getNetwork();
   const chainId = Number(net.chainId);
   if (chainId !== 11155111) {
     throw new Error(`unexpected chainId ${chainId} — expected Sepolia 11155111`);

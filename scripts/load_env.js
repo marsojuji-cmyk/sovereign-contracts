@@ -3,11 +3,11 @@
  * Does not override variables already present in process.env.
  * Never logs values.
  */
-const fs = require("fs");
-const path = require("path");
+import fs from "node:fs";
+import path from "node:path";
 
-function loadEnv(filePath) {
-  const p = filePath || path.join(__dirname, "..", ".env");
+export function loadEnv(filePath) {
+  const p = filePath || path.join(import.meta.dirname, "..", ".env");
   if (!fs.existsSync(p)) return false;
   const text = fs.readFileSync(p, "utf8");
   for (const raw of text.split("\n")) {
@@ -29,5 +29,3 @@ function loadEnv(filePath) {
   }
   return true;
 }
-
-module.exports = { loadEnv };

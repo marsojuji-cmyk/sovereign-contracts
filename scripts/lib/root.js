@@ -2,10 +2,10 @@
  * Resolve secure_pipeline repo root from any nested scripts/* path.
  * Marker: hardhat.config.js + AGENTS.md
  */
-const fs = require("fs");
-const path = require("path");
+import fs from "node:fs";
+import path from "node:path";
 
-function projectRoot(startDir) {
+export function projectRoot(startDir) {
   const env = process.env.SECURE_PIPELINE_ROOT;
   if (env) {
     const p = path.resolve(env);
@@ -17,7 +17,7 @@ function projectRoot(startDir) {
     }
   }
 
-  let d = path.resolve(startDir || __dirname);
+  let d = path.resolve(startDir || import.meta.dirname);
   for (let i = 0; i < 8; i++) {
     if (
       fs.existsSync(path.join(d, "hardhat.config.js")) &&
@@ -33,5 +33,3 @@ function projectRoot(startDir) {
     "secure_pipeline root not found (looking for hardhat.config.js + AGENTS.md)"
   );
 }
-
-module.exports = { projectRoot };

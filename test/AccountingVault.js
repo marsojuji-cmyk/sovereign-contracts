@@ -1,6 +1,11 @@
-const { expect } = require("chai");
-const { ethers } = require("hardhat");
-const { loadFixture } = require("@nomicfoundation/hardhat-toolbox/network-helpers");
+import { expect } from "chai";
+import hre from "hardhat";
+
+// Single shared connection for the whole file (Hardhat 3: no global hre.ethers).
+// create() gives this file its own connection; the deprecated connect() is avoided.
+const connection = await hre.network.create();
+const ethers = connection.ethers;
+const networkHelpers = connection.networkHelpers;
 
 describe("AccountingVault", function () {
   async function deployFixture() {
@@ -13,7 +18,7 @@ describe("AccountingVault", function () {
 
   describe("deposit", function () {
     it("credits the caller via deposit()", async function () {
-      const { vault, alice } = await loadFixture(deployFixture);
+      const { vault, alice } = await networkHelpers.loadFixture(deployFixture);
       const amount = ethers.parseEther("1");
 
       await expect(vault.connect(alice).deposit({ value: amount }))
@@ -26,7 +31,7 @@ describe("AccountingVault", function () {
     });
 
     it("credits via receive()", async function () {
-      const { vault, bob } = await loadFixture(deployFixture);
+      const { vault, bob } = await networkHelpers.loadFixture(deployFixture);
       const amount = ethers.parseEther("0.25");
 
       await expect(bob.sendTransaction({ to: await vault.getAddress(), value: amount }))
@@ -37,7 +42,7 @@ describe("AccountingVault", function () {
     });
 
     it("depositTo credits a third party", async function () {
-      const { vault, alice, bob } = await loadFixture(deployFixture);
+      const { vault, alice, bob } = await networkHelpers.loadFixture(deployFixture);
       const amount = ethers.parseEther("2");
 
       await vault.connect(alice).depositTo(bob.address, { value: amount });
@@ -46,7 +51,7 @@ describe("AccountingVault", function () {
     });
 
     it("rejects zero deposits and zero depositTo target", async function () {
-      const { vault, alice } = await loadFixture(deployFixture);
+      const { vault, alice } = await networkHelpers.loadFixture(deployFixture);
       await expect(vault.connect(alice).deposit({ value: 0 })).to.be.revertedWithCustomError(
         vault,
         "ZeroAmount"
@@ -59,7 +64,7 @@ describe("AccountingVault", function () {
 
   describe("withdraw", function () {
     it("lets a user pull their own credit only", async function () {
-      const { vault, alice, bob } = await loadFixture(deployFixture);
+      const { vault, alice, bob } = await networkHelpers.loadFixture(deployFixture);
       const amount = ethers.parseEther("1");
       await vault.connect(alice).deposit({ value: amount });
       await vault.connect(bob).deposit({ value: ethers.parseEther("3") });
@@ -75,7 +80,7 @@ describe("AccountingVault", function () {
     });
 
     it("reverts on over-withdraw and zero amount", async function () {
-      const { vault, alice } = await loadFixture(deployFixture);
+      const { vault, alice } = await networkHelpers.loadFixture(deployFixture);
       await vault.connect(alice).deposit({ value: ethers.parseEther("1") });
 
       await expect(vault.connect(alice).withdraw(0)).to.be.revertedWithCustomError(
@@ -88,7 +93,7 @@ describe("AccountingVault", function () {
     });
 
     it("blocks reentrancy on withdraw", async function () {
-      const { vault } = await loadFixture(deployFixture);
+      const { vault } = await networkHelpers.loadFixture(deployFixture);
       const Attacker = await ethers.getContractFactory("AccountingVaultReentrancyAttacker");
       const attacker = await Attacker.deploy(await vault.getAddress());
       await attacker.waitForDeployment();
@@ -104,7 +109,7 @@ describe("AccountingVault", function () {
     });
 
     it("reverts TransferFailed when pull recipient rejects ETH", async function () {
-      const { vault } = await loadFixture(deployFixture);
+      const { vault } = await networkHelpers.loadFixture(deployFixture);
       const Rejector = await ethers.getContractFactory("AccountingVaultTransferRejector");
       const rejector = await Rejector.deploy(await vault.getAddress());
       await rejector.waitForDeployment();
@@ -119,7 +124,7 @@ describe("AccountingVault", function () {
     });
 
     it("partial withdraw keeps solvency", async function () {
-      const { vault, alice } = await loadFixture(deployFixture);
+      const { vault, alice } = await networkHelpers.loadFixture(deployFixture);
       await vault.connect(alice).deposit({ value: ethers.parseEther("2") });
       await vault.connect(alice).withdraw(ethers.parseEther("0.5"));
       expect(await vault.totalCredit()).to.equal(ethers.parseEther("1.5"));
