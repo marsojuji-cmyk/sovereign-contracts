@@ -1,6 +1,6 @@
 # Sovereign Contracts
 
-Local-first **Hardhat 2 + Python** workspace for sovereign contract work.
+Local-first **Hardhat 3 + Python** workspace for sovereign contract work.
 
 ```
 Purpose  → auditable compile / test / cover / deploy path
@@ -12,7 +12,7 @@ Constraints → local-first · stdlib Python core · venv-scoped optional deps �
 
 | Side | Role |
 |------|------|
-| **Hardhat 2** | Compile, test, Ignition deploy, verify (when keyed), coverage |
+| **Hardhat 3** | Compile, test, Ignition deploy, verify (when keyed), coverage |
 | **Python 3** | Host preflight, gates, glue (stdlib-first) |
 | **SecureVault** | Owner-custody ETH vault scaffold |
 | **AccountingVault** | Pull/credit ledger (different threat model) |
@@ -40,7 +40,7 @@ make tree
 | `make preflight` | Hardware + Python + privacy |
 | `make compile` | Solidity → artifacts |
 | `make test` | Full suite (unit + safety + invariants) |
-| `make coverage` | solidity-coverage report |
+| `make coverage` | Hardhat 3 built-in coverage (lcov + HTML) |
 | `make deploy-local` | Ignition → SecureVault (hardhat net) |
 | `make deploy-accounting` | Ignition → AccountingVault |
 | `make check` | preflight + compile + test (fast) |

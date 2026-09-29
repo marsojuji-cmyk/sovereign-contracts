@@ -41,8 +41,8 @@ contract AccountingVault {
     }
 
     /// @notice Credit `msg.value` to `account` (payer may fund someone else).
+    /// @dev Zero-address guard lives in `_deposit` (single check, exercised path).
     function depositTo(address account) external payable {
-        if (account == address(0)) revert ZeroAddress();
         _deposit(account, msg.value);
     }
 

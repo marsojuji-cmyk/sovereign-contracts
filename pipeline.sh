@@ -30,7 +30,7 @@ Secure Pipeline
   ./pipeline.sh setup-optional  Bootstrap .venv + optional rich
   ./pipeline.sh compile         Hardhat compile
   ./pipeline.sh test            Hardhat unit tests
-  ./pipeline.sh coverage        solidity-coverage
+  ./pipeline.sh coverage        Hardhat 3 built-in coverage (lcov + HTML)
   ./pipeline.sh check           preflight + compile + test
   ./pipeline.sh deploy-local    Ignition SecureVault (hardhat net)
   ./pipeline.sh env-check       Offline env shape check (no RPC)
@@ -76,7 +76,7 @@ case "$cmd" in
     ;;
   compile)
     need_npx
-    exec npx hardhat compile "$@"
+    exec npx hardhat build "$@"
     ;;
   test)
     need_npx
@@ -89,7 +89,7 @@ case "$cmd" in
   check)
     need_npx
     "$PY" "$ROOT/src/preflight.py"
-    npx hardhat compile
+    npx hardhat build
     npx hardhat test
     echo ""
     echo "✓ check passed (preflight + compile + test)"

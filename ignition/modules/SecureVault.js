@@ -1,4 +1,4 @@
-const { buildModule } = require("@nomicfoundation/hardhat-ignition/modules");
+import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
 
 /**
  * Deploy SecureVault with an explicit initial owner.
@@ -10,4 +10,4 @@ const SecureVaultModule = buildModule("SecureVaultModule", (m) => {
   return { vault };
 });
 
-module.exports = SecureVaultModule;
+export default SecureVaultModule;

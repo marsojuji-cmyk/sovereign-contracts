@@ -2,8 +2,9 @@
 """
 Assert 100% statement coverage on production vault contracts.
 
-Reads Istanbul/nyc coverage-final.json (or coverage.json).
-Does NOT re-run hardhat coverage — call after `make coverage`.
+Reads Istanbul/nyc coverage-final.json (or coverage.json) from the legacy
+solidity-coverage setup, or coverage/lcov.info from Hardhat 3's built-in
+coverage. Does NOT re-run hardhat coverage — call after `make coverage`.
 
 Usage:
   python3 scripts/gates/coverage_floor.py
@@ -29,6 +30,28 @@ PRODUCTION = (
 )
 
 
+def _parse_lcov(path: Path) -> dict:
+    """Parse an lcov report into the Istanbul-ish shape this gate consumes.
+
+    Hardhat 3's built-in coverage writes coverage/lcov.info (no Istanbul JSON).
+    Each SF record becomes {"path": <rel>, "s": {<line>: <hits>}} so the
+    existing statement-percentage math applies to executable lines.
+    """
+    data: dict = {}
+    cur: dict | None = None
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.startswith("SF:"):
+            cur = {"path": line[3:], "s": {}}
+            data[line[3:]] = cur
+        elif line.startswith("DA:") and cur is not None:
+            parts = line[3:].split(",")
+            if len(parts) >= 2 and parts[0].strip().isdigit():
+                cur["s"][parts[0].strip()] = int(parts[1])
+        elif line == "end_of_record":
+            cur = None
+    return data
+
+
 def _load_report() -> tuple[Path, dict]:
     for rel in ("coverage/coverage-final.json", "coverage.json"):
         path = ROOT / rel
@@ -37,9 +60,13 @@ def _load_report() -> tuple[Path, dict]:
             if not isinstance(data, dict):
                 raise SystemExit(f"unexpected coverage format: {path}")
             return path, data
+    # Hardhat 3 built-in coverage emits lcov.info (+ html), not Istanbul JSON.
+    lcov = ROOT / "coverage" / "lcov.info"
+    if lcov.is_file():
+        return lcov, _parse_lcov(lcov)
     raise SystemExit(
         "no coverage report found — run: make coverage\n"
-        "expected coverage/coverage-final.json or coverage.json"
+        "expected coverage/coverage-final.json, coverage.json, or coverage/lcov.info"
     )
 
 

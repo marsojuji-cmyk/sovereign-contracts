@@ -2,11 +2,11 @@
  * Deploy BuildManifestAnchor on current network and anchor the canonical doc bundle.
  * Local default: in-process Hardhat. No secrets. Stdlib crypto for SHA-256 → bytes32.
  */
-const hre = require("hardhat");
-const fs = require("fs");
-const path = require("path");
-const crypto = require("crypto");
-const { projectRoot } = require("../lib/root");
+import hre from "hardhat";
+import fs from "node:fs";
+import path from "node:path";
+import crypto from "node:crypto";
+import { projectRoot } from "../lib/root.js";
 
 const BUNDLE_DOCS = [
   "docs/doctrine/GROK_BUILD_INSTRUCTIONS.md",
@@ -18,7 +18,7 @@ const LABEL = process.env.MANIFEST_LABEL || "NEXUS_PIPELINE_BUNDLE";
 const VERSION = process.env.MANIFEST_VERSION || "2026-07-10";
 
 function bundleContentHash() {
-  const root = projectRoot(__dirname);
+  const root = projectRoot(import.meta.dirname);
   const parts = BUNDLE_DOCS.map((rel) => {
     const p = path.join(root, rel);
     if (!fs.existsSync(p)) throw new Error(`missing bundle doc: ${rel}`);
@@ -30,9 +30,10 @@ function bundleContentHash() {
 }
 
 async function main() {
+  const { ethers } = await hre.network.create();
   const hash = bundleContentHash();
-  const [owner] = await hre.ethers.getSigners();
-  const Factory = await hre.ethers.getContractFactory("BuildManifestAnchor");
+  const [owner] = await ethers.getSigners();
+  const Factory = await ethers.getContractFactory("BuildManifestAnchor");
   const anchor = await Factory.deploy(owner.address);
   await anchor.waitForDeployment();
   const addr = await anchor.getAddress();

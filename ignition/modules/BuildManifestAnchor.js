@@ -1,4 +1,4 @@
-const { buildModule } = require("@nomicfoundation/hardhat-ignition/modules");
+import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
 
 /**
  * Deploy BuildManifestAnchor — publisher for off-chain LIBRARIAN / Grok Build manifests.
@@ -9,4 +9,4 @@ const BuildManifestAnchorModule = buildModule("BuildManifestAnchorModule", (m) =
   return { anchor };
 });
 
-module.exports = BuildManifestAnchorModule;
+export default BuildManifestAnchorModule;
