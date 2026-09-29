@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.0 (2026-09-29)
+
+- feat!: migrate to hardhat v3 (#7)
+
 ## v0.1.0 (2026-09-27)
 
 - feat(SecureVault): pause, two-step ownership, and withdrawAll
