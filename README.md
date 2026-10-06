@@ -1,5 +1,7 @@
 # Sovereign Contracts
 
+**An auditable compile/test/cover/deploy path — local-first, no cloud accounts.**
+
 Local-first **Hardhat 3 + Python** workspace for sovereign contract work.
 
 ```
