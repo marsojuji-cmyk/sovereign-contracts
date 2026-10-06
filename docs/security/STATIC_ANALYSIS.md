@@ -13,7 +13,7 @@
 ## Install (once)
 
 ```bash
-cd /Volumes/Agent_Tenet10/Users/admin/agents/secure_pipeline   # or your clone
+cd /path/to/sovereign-contracts   # your clone
 export PATH="$HOME/.local/bin:$PATH"   # Node for Hardhat if needed
 ./scripts/bootstrap/setup_python.sh --with-slither --force
 # equivalent: .venv/bin/pip install -r requirements-slither.txt

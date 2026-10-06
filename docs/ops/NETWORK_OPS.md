@@ -37,7 +37,7 @@ This phase **does not expand contracts**. It only documents optional network ops
 Template: [`.env.example`](../.env.example) → copy to `.env` locally:
 
 ```bash
-cd /Users/admin/agents/secure_pipeline
+cd /path/to/sovereign-contracts   # your clone
 cp .env.example .env
 chmod 600 .env
 # edit .env in a local editor — do not paste keys into chat logs
