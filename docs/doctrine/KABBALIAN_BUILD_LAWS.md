@@ -1,7 +1,7 @@
 # Kabbalian build laws (engineering companion)
 
 **Status:** v1 — maps classical Kabbalistic structure to `secure_pipeline` gates.  
-**Pairs with:** `docs/doctrine/GROK_BUILD_INSTRUCTIONS.md`, `docs/doctrine/BUILD_FRAME_NEXUS_PIPELINE.md`, `AGENTS.md`.  
+**Pairs with:** Grok Build Instructions v1 (internal; not included in this repo), `docs/doctrine/BUILD_FRAME_NEXUS_PIPELINE.md`, `AGENTS.md`.  
 **Not a substitute for:** tests, Slither, or `make check` / `make check-full`.
 
 ---
@@ -47,7 +47,7 @@
 
 | Source | Role | Note |
 |--------|------|------|
-| Grok Build v1 (`docs/doctrine/GROK_BUILD_INSTRUCTIONS.md`) | Primary for Five Lenses, validate-against-reality | Nexus.sov import |
+| Grok Build v1 (internal; not included in this repo) | Primary for Five Lenses, validate-against-reality | Nexus.sov import |
 | `docs/doctrine/BUILD_FRAME_NEXUS_PIPELINE.md` | Primary for pipeline ↔ Nexus bridge | Applied frame |
 | `AGENTS.md` | Primary for gate commands | Phase 5 table |
 | Classical Kabbalah (Four Worlds, Tzimtzum, Tikkun, PaRDeS) | **Secondary** — cross-domain synthesis | Engineering mapping, not dogma |
@@ -109,7 +109,7 @@ Construct and maintain a **local-first EVM vault pipeline** whose custody and ac
 
 | World | Pipeline stage | Where it lives in repo | Status |
 |-------|----------------|------------------------|--------|
-| **Atzilut** | Prime Objective, WHO/WHY, threat split | `GROK_BUILD_INSTRUCTIONS.md`, `BUILD_FRAME_NEXUS_PIPELINE.md`, `THREAT_MODELS.md`, session Commander's Intent | **Partial skip:** small edits often omit explicit Atzilut paragraph |
+| **Atzilut** | Prime Objective, WHO/WHY, threat split | Grok Build Instructions v1 (internal; not included), `BUILD_FRAME_NEXUS_PIPELINE.md`, `THREAT_MODELS.md`, session Commander's Intent | **Partial skip:** small edits often omit explicit Atzilut paragraph |
 | **Beriah** | Blueprints, modules, LIBRARIAN reports | `ignition/`, design docs, `LIBRARIAN_PROTOCOL.md` | **Partial skip:** host-only script tweaks without doc/threat note |
 | **Yetzirah** | Code + tests as formed vessels | `contracts/`, `test/`, `scripts/` | **Strong** — default builder focus |
 | **Assiah** | Manifest proof | `make check`, `check-full`, `data/health.json`, deploy targets | **Partial skip:** `make test` without preflight; `check-full` without coverage when claiming 100%; deploy without `env-check` |

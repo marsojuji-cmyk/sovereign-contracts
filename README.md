@@ -57,7 +57,7 @@ make tree
 **Sepolia / verify:** [`docs/ops/NETWORK_OPS.md`](docs/ops/NETWORK_OPS.md) (no `make deploy-sepolia`).  
 **Slither:** [`docs/security/STATIC_ANALYSIS.md`](docs/security/STATIC_ANALYSIS.md) — `make setup-slither && make slither`.  
 **Docs index:** [`docs/README.md`](docs/README.md).  
-**Grok rules:** [`AGENTS.md`](AGENTS.md) + [`.grok/rules/`](.grok/rules/).
+**Agent rules:** [`AGENTS.md`](AGENTS.md).
 
 npm mirrors:
 
@@ -74,9 +74,6 @@ npm run check
 secure_pipeline/
 ├── AGENTS.md · README.md · Makefile · pipeline.sh
 ├── hardhat.config.js · package.json · slither.config.json
-├── .grok/
-│   ├── agents/pipeline.md     # project agent (grok-build)
-│   └── rules/                 # auto-loaded structure + gates
 ├── contracts/                 # SecureVault · AccountingVault · BuildManifestAnchor
 │   └── test/AttackHelpers.sol
 ├── test/                      # unit + safety + invariants

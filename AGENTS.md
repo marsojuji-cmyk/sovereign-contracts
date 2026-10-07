@@ -37,9 +37,6 @@ secure_pipeline/
 ├── hardhat.config.js         # solc 0.8.28 · networks · plugins
 ├── package.json              # npm scripts mirror make targets
 ├── .env.example              # Shape only — never commit .env
-├── .grok/
-│   ├── agents/pipeline.md    # Project agent profile (grok-build)
-│   └── rules/                # Auto-loaded Grok rules (structure + gates)
 ├── contracts/                # Production + test Solidity
 ├── test/                     # Hardhat JS suites
 ├── ignition/modules/         # Declarative deploys
@@ -70,8 +67,6 @@ Print this map anytime: `make tree`.
 |------|------|
 | `pipeline.sh` / `Makefile` | Unified entrypoints |
 | `hardhat.config.js` | Networks, solc 0.8.28, plugins |
-| `.grok/agents/pipeline.md` | Project agent (model: grok-build) |
-| `.grok/rules/` | Auto-loaded structure + gate rules for Grok |
 | `contracts/SecureVault.sol` | Owner-custody vault scaffold |
 | `contracts/AccountingVault.sol` | Pull/credit vault (different threat model) |
 | `contracts/BuildManifestAnchor.sol` | Event-only LIBRARIAN / build manifest anchors |
@@ -82,7 +77,6 @@ Print this map anytime: `make tree`.
 | `docs/security/THREAT_MODELS.md` | Threat model notes |
 | `docs/ops/NETWORK_OPS.md` | Sepolia / verify ops (opt-in; docs-first) |
 | `docs/security/STATIC_ANALYSIS.md` | Slither install / gate / accepted findings |
-| `docs/doctrine/GROK_BUILD_INSTRUCTIONS.md` | Grok Build v1; construction-over-consumption |
 | `docs/doctrine/LIBRARIAN_PROTOCOL.md` | Report/doc skeleton (companion to Build §6) |
 | `docs/doctrine/BUILD_FRAME_NEXUS_PIPELINE.md` | Five Lenses + Prime Objective applied |
 | `docs/doctrine/KABBALIAN_BUILD_LAWS.md` | Four Worlds, Gevurah/Malkhut ↔ Makefile gates |
@@ -102,7 +96,7 @@ Print this map anytime: `make tree`.
 | `data/` | Local lineage (chmod 700; do not commit secrets) |
 
 ## When editing this project
-- Non-trivial builds: apply **Five Lenses** + Prime Objective (`docs/doctrine/GROK_BUILD_INSTRUCTIONS.md`); reports use **LIBRARIAN** (`docs/doctrine/LIBRARIAN_PROTOCOL.md`); optional Kabbalian frame (`docs/doctrine/KABBALIAN_BUILD_LAWS.md`) for Atzilut/Gevurah/Malkhut + Four Worlds.
+- Non-trivial builds: apply **Five Lenses** + Prime Objective (summarized in `docs/doctrine/BUILD_FRAME_NEXUS_PIPELINE.md`); reports use **LIBRARIAN** (`docs/doctrine/LIBRARIAN_PROTOCOL.md`); optional Kabbalian frame (`docs/doctrine/KABBALIAN_BUILD_LAWS.md`) for Atzilut/Gevurah/Malkhut + Four Worlds.
 - Multi-step work: open with **Commander's Intent** (Purpose / End State / Constraints / Implied Tasks).
 - Prefer tables for schema/mapping; Threat/Opportunity for architecture choices.
 - End with **Immediate Next Actions**.
@@ -154,9 +148,9 @@ Print this map anytime: `make tree`.
 ## Grok Build activation (paste)
 ```
 Plan: Work inside secure_pipeline using AGENTS.md ethos.
-Path: /Users/admin/agents/secure_pipeline (or local clone).
+Path: /path/to/sovereign-contracts (your local clone).
 Stack: Hardhat 3 for Solidity; Python stdlib-first + optional .venv.
-Layout: make tree · docs/README.md · .grok/rules/
+Layout: make tree · docs/README.md
 Hardware: 2015-class Intel MBP — lightweight, no global pip installs.
 Privacy: local-only core; no telemetry; no secrets in git.
 Success: make check green; contracts/ diffs also make check-full; auditable diffs.

@@ -37,7 +37,7 @@ help:
 	@echo ""
 	@echo "Sepolia / verify: docs/ops/NETWORK_OPS.md"
 	@echo "Slither:          docs/security/STATIC_ANALYSIS.md"
-	@echo "Layout / Grok:    docs/README.md · AGENTS.md · .grok/rules/"
+	@echo "Layout:           docs/README.md · AGENTS.md"
 	@echo ""
 
 preflight:
@@ -107,7 +107,6 @@ tree:
 	@echo "secure_pipeline/ (engineered layout)"
 	@echo "├── AGENTS.md · README.md · Makefile · pipeline.sh"
 	@echo "├── hardhat.config.js · package.json · slither.config.json"
-	@echo "├── .grok/agents/ · .grok/rules/     # Grok profile + auto rules"
 	@echo "├── contracts/                       # Solidity sources"
 	@echo "├── test/                            # Hardhat tests"
 	@echo "├── ignition/modules/                # Deploy modules"

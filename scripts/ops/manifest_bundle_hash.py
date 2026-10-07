@@ -15,7 +15,6 @@ ROOT = project_root(Path(__file__))
 
 # Canonical doctrine bundle (content-hashed for BuildManifestAnchor)
 DOCS = (
-    "docs/doctrine/GROK_BUILD_INSTRUCTIONS.md",
     "docs/doctrine/LIBRARIAN_PROTOCOL.md",
     "docs/doctrine/BUILD_FRAME_NEXUS_PIPELINE.md",
 )
