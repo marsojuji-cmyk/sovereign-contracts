@@ -23,7 +23,7 @@ Constraints → local-first · stdlib Python core · venv-scoped optional deps �
 ## Quickstart
 
 ```bash
-cd /Users/admin/agents/secure_pipeline
+cd /path/to/sovereign-contracts   # your clone
 
 # one-time Python venv (if missing)
 make setup-python
