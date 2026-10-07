@@ -13,7 +13,7 @@
 | Audience | Builder (admin), future auditors, Grok Build sessions |
 | In scope | Operating system for construction; EVM vault pipeline as **evidence substrate** |
 | Out of scope | Contents of `Nexus.sov/proton-recovery-phrase.pdf` (never ingest to repo or chat) |
-| Related artifacts | `docs/doctrine/GROK_BUILD_INSTRUCTIONS.md`, `docs/doctrine/LIBRARIAN_PROTOCOL.md`, `AGENTS.md` |
+| Related artifacts | Grok Build Instructions v1 (internal; not included in this repo), `docs/doctrine/LIBRARIAN_PROTOCOL.md`, `AGENTS.md` |
 | Upstream pack | `~/Downloads/.../Nexus.sov/Grok Build instructions v.1/` |
 
 ---
@@ -100,7 +100,7 @@
 
 | Artifact | Path |
 |----------|------|
-| Grok Build v1 (repo) | `docs/doctrine/GROK_BUILD_INSTRUCTIONS.md` |
+| Grok Build v1 | internal; not included in this repo |
 | LIBRARIAN spec | `docs/doctrine/LIBRARIAN_PROTOCOL.md` |
 | This frame | `docs/doctrine/BUILD_FRAME_NEXUS_PIPELINE.md` |
 | Grok Build v1 (global) | `~/.grok/docs/grok-build-instructions.md` |

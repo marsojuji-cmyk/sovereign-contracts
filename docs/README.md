@@ -20,7 +20,6 @@ Local-first docs for **secure_pipeline**. Prefer this map over hunting filenames
 
 | Doc | When to read |
 |-----|----------------|
-| [doctrine/GROK_BUILD_INSTRUCTIONS.md](doctrine/GROK_BUILD_INSTRUCTIONS.md) | Five Lenses + Prime Objective (v1) |
 | [doctrine/LIBRARIAN_PROTOCOL.md](doctrine/LIBRARIAN_PROTOCOL.md) | Report / doc skeleton |
 | [doctrine/BUILD_FRAME_NEXUS_PIPELINE.md](doctrine/BUILD_FRAME_NEXUS_PIPELINE.md) | Applied frame: Nexus ↔ this pipeline |
 | [doctrine/KABBALIAN_BUILD_LAWS.md](doctrine/KABBALIAN_BUILD_LAWS.md) | Four Worlds ↔ Makefile gates |

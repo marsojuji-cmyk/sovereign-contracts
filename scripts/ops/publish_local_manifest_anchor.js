@@ -9,7 +9,6 @@ import crypto from "node:crypto";
 import { projectRoot } from "../lib/root.js";
 
 const BUNDLE_DOCS = [
-  "docs/doctrine/GROK_BUILD_INSTRUCTIONS.md",
   "docs/doctrine/LIBRARIAN_PROTOCOL.md",
   "docs/doctrine/BUILD_FRAME_NEXUS_PIPELINE.md",
 ];

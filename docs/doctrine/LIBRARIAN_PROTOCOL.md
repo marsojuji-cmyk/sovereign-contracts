@@ -1,7 +1,7 @@
 # LIBRARIAN Protocol (v1 companion)
 
 **Status:** Defined here because Grok Build Instructions v1.0 references this structure but does not ship a separate spec.  
-**Pairs with:** `docs/doctrine/GROK_BUILD_INSTRUCTIONS.md` (Build Protocol §6) and project `AGENTS.md` (Commander's Intent).  
+**Pairs with:** Grok Build Instructions v1 (Build Protocol §6; internal, not included in this repo) and project `AGENTS.md` (Commander's Intent).  
 **Use when:** Any document or report is a *deliverable* (threat model, network ops, design memo, portfolio evidence).
 
 ---
